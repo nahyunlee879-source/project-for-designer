@@ -1,27 +1,45 @@
-# project-for-designer
-made useful thing for designers
-All-in-One Workspace for Designers (Working Title)
-A dedicated productivity platform that streamlines complex workflows at a glance—from collecting inspiration to managing schedules.
+# NAYUL WORKROOM
 
-🌟 Key Features
-1. Personalized Reference Organization by Project
-Customizable Boards: Freely arrange reference images in grid or list formats to perfectly match the mood of your ongoing projects.
+디자이너/학생을 위한 개인 크리에이티브 운영체제 MVP입니다. 공부, 언어공부, 디자인 프로젝트, 프롬프트, 포트폴리오, 취업 준비, 돈 관리, 주간 회고를 localStorage 기반으로 관리합니다.
 
-Smart Tagging & Filtering: Assign tags by color, style, or category to quickly track down the exact inspiration you need.
+## 기술 스택
 
-2. Schedule & Project Management
-Design-Specific Timeline: Grasp deadlines and workflows instantly through highly visual Gantt charts and calendars.
+- Next.js App Router
+- TypeScript
+- Tailwind CSS
+- localStorage 저장
+- 반응형 웹 디자인
 
-Directory Mapping: Link your project schedules directly with your collected reference folders, allowing you to focus on your work without constantly switching screens.
+## 실행 방법
 
-🚀 Getting Started
-1. Download
-Please download and install the version compatible with your OS. (iOS / Android / Web / Desktop)
+```bash
+npm install
+npm run dev
+```
 
-2. Execution
-Launch the app and sign up for an account or log in.
+브라우저에서 아래 주소를 엽니다.
 
-Click the 'Create New Project' button to build your personalized design workspace.
+```bash
+http://localhost:3000
+```
 
-📄 License
-This project is licensed under the MIT License. You are free to use, modify, and distribute it.
+## 빌드 확인
+
+```bash
+npm run build
+```
+
+## 데이터 저장 방식
+
+별도 로그인, Supabase, 외부 API 없이 브라우저 `localStorage`에 저장됩니다. 저장 키는 `nayul-workroom:v1`입니다. 앱 왼쪽 사이드바의 `샘플 데이터 복원` 버튼으로 초기 샘플 데이터를 다시 불러올 수 있습니다.
+
+## MVP 화면
+
+- Today Command
+- Task Manager
+- Project Archive
+- Language Ritual
+- Designer Vault
+- Prompt Archive
+- Money Room
+- Weekly Reset
