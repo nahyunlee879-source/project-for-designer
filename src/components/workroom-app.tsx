@@ -98,6 +98,13 @@ const pageKicker: Record<PageKey, string> = {
   weekly: "weekly editorial reset",
 };
 
+const toneChips = [
+  { label: "ivory ground", className: "bg-ivory" },
+  { label: "pale blue signal", className: "bg-blue" },
+  { label: "soft grey surface", className: "bg-mist" },
+  { label: "cherry mark", className: "bg-cherry" },
+];
+
 const todayIso = () => new Date().toISOString().slice(0, 10);
 
 const makeId = (prefix: string) => {
@@ -221,16 +228,19 @@ export function WorkroomApp() {
 
   return (
     <div className="min-h-screen text-ink">
-      <aside className="fixed left-0 top-0 z-20 hidden h-screen w-[284px] border-r border-silver/40 bg-ivory/95 px-6 py-7 backdrop-blur lg:flex lg:flex-col">
-        <div className="mb-10">
-          <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-[8px] border border-silver/60 bg-mist">
+      <aside className="fixed left-0 top-0 z-20 hidden h-screen w-[292px] border-r border-silver/30 bg-paper/90 px-5 py-6 shadow-insetline backdrop-blur-xl lg:flex lg:flex-col">
+        <div className="mb-9 border-b border-silver/30 pb-7">
+          <div className="mb-5 flex h-11 w-11 items-center justify-center rounded-[8px] border border-silver/50 bg-mist/80 shadow-insetline">
             <Palette className="h-5 w-5 text-cherry" />
           </div>
-          <p className="text-xs uppercase text-ink/50">personal archive</p>
-          <h1 className="mt-2 text-2xl font-semibold leading-tight">NAYUL WORKROOM</h1>
+          <p className="text-[11px] uppercase tracking-[0.22em] text-ink/40">private studio</p>
+          <h1 className="mt-3 text-[1.7rem] font-semibold leading-[1.02]">NAYUL WORKROOM</h1>
+          <p className="mt-4 max-w-[210px] text-xs leading-5 text-ink/50">
+            A quiet archive for study, design, language, money, and weekly reset.
+          </p>
         </div>
 
-        <nav className="space-y-2">
+        <nav className="space-y-1.5">
           {navItems.map((item) => {
             const Icon = item.icon;
             const isActive = item.key === activePage;
@@ -238,28 +248,35 @@ export function WorkroomApp() {
             return (
               <button
                 key={item.key}
-                className={`flex w-full items-center gap-3 rounded-[8px] border px-3 py-3 text-left text-sm transition ${
+                className={`group flex w-full items-center justify-between gap-3 rounded-[8px] border px-3 py-2.5 text-left text-sm transition ${
                   isActive
-                    ? "border-cherry/30 bg-white text-cherry shadow-editorial"
-                    : "border-transparent text-ink/70 hover:border-silver/50 hover:bg-white/60"
+                    ? "border-cherry/40 bg-white/90 text-cherry shadow-insetline"
+                    : "border-transparent text-ink/60 hover:border-silver/40 hover:bg-white/50"
                 }`}
                 onClick={() => setActivePage(item.key)}
                 type="button"
               >
-                <Icon className="h-4 w-4 shrink-0" />
-                <span className="truncate">{item.label}</span>
+                <span className="flex min-w-0 items-center gap-3">
+                  <Icon className="h-4 w-4 shrink-0" />
+                  <span className="truncate">{item.label}</span>
+                </span>
+                <span
+                  className={`h-1.5 w-1.5 rounded-full ${
+                    isActive ? "bg-cherry" : "bg-transparent group-hover:bg-silver"
+                  }`}
+                />
               </button>
             );
           })}
         </nav>
 
-        <div className="mt-auto rounded-[8px] border border-silver/40 bg-white/50 p-4">
-          <p className="text-xs uppercase text-ink/50">storage</p>
+        <div className="mt-auto rounded-[8px] border border-silver/40 bg-white/50 p-4 shadow-insetline">
+          <p className="text-[11px] uppercase tracking-[0.18em] text-ink/40">local archive</p>
           <p className="mt-2 text-sm text-ink/70">
             {isReady ? "localStorage synced" : "loading archive"}
           </p>
           <button
-            className="mt-4 inline-flex items-center gap-2 rounded-[8px] border border-silver/60 px-3 py-2 text-xs text-ink/70 hover:bg-white"
+            className="mt-4 inline-flex items-center gap-2 rounded-[8px] border border-silver/40 bg-paper/70 px-3 py-2 text-xs text-ink/70 transition hover:border-cherry/40 hover:text-cherry"
             onClick={resetData}
             type="button"
           >
@@ -269,25 +286,26 @@ export function WorkroomApp() {
         </div>
       </aside>
 
-      <main className="px-4 pb-28 pt-5 sm:px-6 lg:ml-[284px] lg:px-10 lg:pb-12 lg:pt-8">
-        <div className="mx-auto max-w-[1320px]">
-          <header className="mb-8 flex flex-col justify-between gap-5 border-b border-silver/40 pb-6 md:flex-row md:items-end">
+      <main className="px-4 pb-28 pt-5 sm:px-6 lg:ml-[292px] lg:px-10 lg:pb-12 lg:pt-8">
+        <div className="mx-auto max-w-[1340px]">
+          <header className="mb-8 flex flex-col justify-between gap-5 border-b border-silver/30 pb-7 md:flex-row md:items-end">
             <div>
-              <div className="mb-4 inline-flex items-center gap-2 rounded-[8px] border border-silver/50 bg-white/70 px-3 py-2 text-xs uppercase text-ink/50">
+              <div className="mb-4 inline-flex items-center gap-2 rounded-[8px] border border-silver/40 bg-paper/80 px-3 py-2 text-[11px] uppercase tracking-[0.18em] text-ink/40 shadow-insetline">
                 <ActiveIcon className="h-3.5 w-3.5 text-cherry" />
                 {pageKicker[activePage]}
               </div>
-              <h2 className="text-4xl font-semibold leading-none sm:text-5xl">
+              <h2 className="text-4xl font-semibold leading-[0.95] sm:text-5xl">
                 {navItems.find((item) => item.key === activePage)?.label}
               </h2>
             </div>
-            <div className="grid grid-cols-4 gap-2 text-center text-xs text-ink/50 sm:flex">
-              {["ivory", "pale blue", "silver", "cherry"].map((tone) => (
+            <div className="grid grid-cols-2 gap-2 text-xs text-ink/50 sm:flex">
+              {toneChips.map((tone) => (
                 <span
-                  key={tone}
-                  className="rounded-[8px] border border-silver/40 bg-white/50 px-3 py-2"
+                  key={tone.label}
+                  className="inline-flex items-center gap-2 rounded-[8px] border border-silver/40 bg-white/50 px-3 py-2"
                 >
-                  {tone}
+                  <span className={`h-2.5 w-2.5 rounded-full border border-silver/40 ${tone.className}`} />
+                  {tone.label}
                 </span>
               ))}
             </div>
@@ -306,8 +324,8 @@ export function WorkroomApp() {
         </div>
       </main>
 
-      <nav className="fixed bottom-0 left-0 right-0 z-30 border-t border-silver/40 bg-ivory/95 px-2 py-2 backdrop-blur lg:hidden">
-        <div className="soft-scrollbar flex gap-2 overflow-x-auto">
+      <nav className="fixed bottom-0 left-0 right-0 z-30 border-t border-silver/40 bg-paper/95 px-2 py-2 shadow-[0_-18px_45px_rgba(47,45,39,0.08)] backdrop-blur-xl lg:hidden">
+        <div className="soft-scrollbar flex gap-1.5 overflow-x-auto">
           {navItems.map((item) => {
             const Icon = item.icon;
             const isActive = item.key === activePage;
@@ -315,9 +333,9 @@ export function WorkroomApp() {
             return (
               <button
                 key={item.key}
-                className={`flex min-w-[86px] flex-col items-center gap-1 rounded-[8px] border px-3 py-2 text-[11px] transition ${
+                className={`flex min-w-[78px] flex-col items-center gap-1 rounded-[8px] border px-2.5 py-2 text-[11px] transition ${
                   isActive
-                    ? "border-cherry/40 bg-white text-cherry"
+                    ? "border-cherry/40 bg-white text-cherry shadow-insetline"
                     : "border-transparent text-ink/60"
                 }`}
                 onClick={() => setActivePage(item.key)}
@@ -350,6 +368,10 @@ function TodayCommand({
     .slice(0, 5);
   const activeProjects = data.projects.filter((project) => project.status === "In Progress");
   const dueLanguage = data.languageNotes.filter((note) => note.reviewDate <= today).slice(0, 4);
+  const openTasks = data.tasks.filter((task) => !task.completed).length;
+  const completedTasks = data.tasks.filter((task) => task.completed).length;
+  const focusProject = activeProjects[0] ?? data.projects[0];
+  const nextReview = dueLanguage[0] ?? data.languageNotes[0];
 
   const updatePriority = (index: number, value: string) => {
     setData((current) => {
@@ -360,45 +382,63 @@ function TodayCommand({
   };
 
   return (
-    <div className="grid gap-5 xl:grid-cols-[1.2fr_0.8fr]">
-      <Panel className="min-h-[420px]">
-        <div className="mb-8 flex flex-col justify-between gap-4 md:flex-row md:items-start">
-          <div>
-            <p className="text-sm uppercase text-ink/50">{displayToday()}</p>
-            <h3 className="mt-2 max-w-2xl text-3xl font-semibold leading-tight">
-              오늘은 세 가지 결정만 선명하게.
-            </h3>
+    <div className="grid gap-5 xl:grid-cols-[minmax(0,1.38fr)_minmax(340px,0.62fr)]">
+      <Panel className="overflow-hidden p-0">
+        <div className="border-b border-silver/30 bg-paper/90 p-6 md:p-8">
+          <div className="flex flex-col justify-between gap-6 lg:flex-row lg:items-start">
+            <div className="max-w-3xl">
+              <p className="text-[11px] uppercase tracking-[0.22em] text-cherry">
+                {displayToday()} · NAYUL PRIVATE DESK
+              </p>
+              <h3 className="mt-5 text-4xl font-semibold leading-[1.02] sm:text-5xl">
+                오늘의 작업실은 세 가지 결정으로 조용히 움직입니다.
+              </h3>
+              <p className="mt-5 max-w-2xl text-sm leading-7 text-ink/60">
+                공부, 디자인, 언어, 돈 기록이 흩어지지 않도록 가장 중요한 신호만 남기는
+                개인 커맨드 테이블입니다.
+              </p>
+            </div>
+            <div className="w-full border-t border-silver/30 pt-4 lg:w-[210px] lg:border-l lg:border-t-0 lg:pl-5 lg:pt-0">
+              <p className="text-[11px] uppercase tracking-[0.22em] text-ink/40">desk signal</p>
+              <div className="mt-4 grid grid-cols-3 gap-2 lg:grid-cols-1">
+                <MiniStat label="open" value={String(openTasks)} />
+                <MiniStat label="done" value={String(completedTasks)} />
+                <MiniStat label="project" value={String(activeProjects.length)} />
+              </div>
+            </div>
           </div>
-          <div className="flex gap-2">
-            {[
-              ["tasks", ListTodo],
-              ["projects", Archive],
-              ["money", BadgeDollarSign],
-            ].map(([page, Icon]) => {
-              const QuickIcon = Icon as LucideIcon;
 
-              return (
-                <IconButton
-                  key={page as string}
-                  label={`${page} quick add`}
-                  onClick={() => setActivePage(page as PageKey)}
-                >
-                  <QuickIcon className="h-4 w-4" />
-                </IconButton>
-              );
-            })}
+          <div className="mt-8 flex flex-wrap gap-2">
+            <QuickActionButton
+              icon={ListTodo}
+              label="Task"
+              onClick={() => setActivePage("tasks")}
+            />
+            <QuickActionButton
+              icon={Archive}
+              label="Project"
+              onClick={() => setActivePage("projects")}
+            />
+            <QuickActionButton
+              icon={BadgeDollarSign}
+              label="Money"
+              onClick={() => setActivePage("money")}
+            />
           </div>
         </div>
 
-        <div className="grid gap-3">
+        <div className="grid gap-0 divide-y divide-silver/30 bg-white/50">
           {data.today.priorities.map((priority, index) => (
             <label
               key={`${priority}-${index}`}
-              className="grid gap-2 rounded-[8px] border border-silver/40 bg-white/70 p-4"
+              className="grid gap-4 px-5 py-5 transition hover:bg-white/50 md:grid-cols-[96px_1fr] md:px-8"
             >
-              <span className="text-xs uppercase text-cherry">priority {index + 1}</span>
+              <span className="flex items-center gap-3 text-xs uppercase tracking-[0.18em] text-cherry">
+                <span className="text-2xl font-semibold text-ink/25">0{index + 1}</span>
+                priority
+              </span>
               <input
-                className="w-full bg-transparent text-lg font-medium outline-none placeholder:text-ink/30"
+                className="w-full bg-transparent text-xl font-medium leading-tight outline-none placeholder:text-ink/30 md:text-2xl"
                 onChange={(event) => updatePriority(index, event.target.value)}
                 placeholder="오늘의 핵심 우선순위"
                 value={priority}
@@ -419,22 +459,24 @@ function TodayCommand({
 
         <Panel>
           <SectionTitle icon={CalendarDays} title="urgent tasks" />
-          <div className="mt-4 space-y-3">
+          <div className="mt-5 space-y-3">
             {urgentTasks.length > 0 ? (
               urgentTasks.map((task) => (
                 <div
                   key={task.id}
-                  className="flex items-start justify-between gap-3 border-b border-silver/40 pb-3 last:border-0 last:pb-0"
+                  className="rounded-[8px] border border-silver/30 bg-paper/70 p-4"
                 >
-                  <div>
-                    <p className="font-medium">{task.title}</p>
-                    <p className="mt-1 text-xs text-ink/50">
-                      {task.category} · {task.dueDate}
-                    </p>
+                  <div className="flex items-start justify-between gap-3">
+                    <div>
+                      <p className="font-medium">{task.title}</p>
+                      <p className="mt-1 text-xs text-ink/50">
+                        {task.category} · {task.dueDate}
+                      </p>
+                    </div>
+                    <Badge tone={task.priority === "High" ? "cherry" : "blue"}>
+                      {task.priority}
+                    </Badge>
                   </div>
-                  <Badge tone={task.priority === "High" ? "cherry" : "blue"}>
-                    {task.priority}
-                  </Badge>
                 </div>
               ))
             ) : (
@@ -445,39 +487,42 @@ function TodayCommand({
       </div>
 
       <Panel>
-        <SectionTitle icon={Briefcase} title="in progress projects" />
-        <div className="mt-4 grid gap-3 md:grid-cols-2">
-          {activeProjects.length > 0 ? (
-            activeProjects.map((project) => (
-              <div key={project.id} className="border-l-2 border-blue pl-4">
-                <p className="font-medium">{project.title}</p>
-                <p className="mt-1 text-sm text-ink/60">{project.nextAction}</p>
-              </div>
-            ))
-          ) : (
-            <EmptyLine text="진행 중인 프로젝트가 없습니다." />
-          )}
-        </div>
+        <SectionTitle icon={Briefcase} title="current project signal" />
+        {focusProject ? (
+          <div className="mt-5 grid gap-4 md:grid-cols-[0.9fr_1.1fr]">
+            <div>
+              <Badge tone={focusProject.status === "In Progress" ? "cherry" : "blue"}>
+                {focusProject.status}
+              </Badge>
+              <h3 className="mt-3 text-2xl font-semibold leading-tight">{focusProject.title}</h3>
+              <p className="mt-2 text-sm text-ink/60">{focusProject.description}</p>
+            </div>
+            <div className="rounded-[8px] border border-silver/30 bg-paper/70 p-4">
+              <p className="text-[11px] uppercase tracking-[0.18em] text-ink/40">next action</p>
+              <p className="mt-3 text-lg font-medium leading-7">{focusProject.nextAction}</p>
+            </div>
+          </div>
+        ) : (
+          <EmptyLine text="진행 중인 프로젝트가 없습니다." />
+        )}
       </Panel>
 
       <Panel>
-        <SectionTitle icon={BookOpen} title="language review" />
-        <div className="mt-4 grid gap-3 md:grid-cols-2">
-          {dueLanguage.length > 0 ? (
-            dueLanguage.map((note) => (
-              <div key={note.id} className="rounded-[8px] border border-silver/40 bg-mist/70 p-4">
-                <div className="flex items-center justify-between gap-3">
-                  <Badge tone="blue">{note.language}</Badge>
-                  <span className="text-xs text-ink/50">{note.level}</span>
-                </div>
-                <p className="mt-3 font-medium">{note.original}</p>
-                <p className="mt-1 text-sm text-ink/60">{note.meaning}</p>
-              </div>
-            ))
-          ) : (
-            <EmptyLine text="오늘 복습할 문장이 없습니다." />
-          )}
-        </div>
+        <SectionTitle icon={BookOpen} title="language ritual" />
+        {nextReview ? (
+          <div className="mt-5 rounded-[8px] border border-blue/50 bg-powder/50 p-5">
+            <div className="flex items-center justify-between gap-3">
+              <Badge tone="blue">{nextReview.language}</Badge>
+              <span className="text-xs uppercase tracking-[0.18em] text-ink/40">
+                {nextReview.level} · {nextReview.reviewDate}
+              </span>
+            </div>
+            <p className="mt-4 text-xl font-medium leading-8">{nextReview.original}</p>
+            <p className="mt-2 text-sm leading-6 text-ink/60">{nextReview.meaning}</p>
+          </div>
+        ) : (
+          <EmptyLine text="오늘 복습할 문장이 없습니다." />
+        )}
       </Panel>
     </div>
   );
@@ -559,7 +604,7 @@ function TaskManager({ data, setData }: { data: WorkroomData; setData: DataSette
           {data.tasks.map((task) => (
             <div
               key={task.id}
-              className="grid gap-3 rounded-[8px] border border-silver/40 bg-white/70 p-4 sm:grid-cols-[auto_1fr_auto]"
+              className="grid gap-3 rounded-[8px] border border-silver/40 bg-paper/75 p-4 shadow-insetline sm:grid-cols-[auto_1fr_auto]"
             >
               <button
                 aria-label={task.completed ? "완료 취소" : "완료"}
@@ -785,7 +830,10 @@ function LanguageRitual({ data, setData }: { data: WorkroomData; setData: DataSe
         <SectionTitle icon={Languages} title="review archive" />
         <div className="mt-5 grid gap-3">
           {data.languageNotes.map((note) => (
-            <div key={note.id} className="rounded-[8px] border border-silver/40 bg-white/70 p-4">
+            <div
+              key={note.id}
+              className="rounded-[8px] border border-silver/40 bg-paper/75 p-4 shadow-insetline"
+            >
               <div className="flex items-start justify-between gap-3">
                 <div className="flex flex-wrap gap-2">
                   <Badge tone="blue">{note.language}</Badge>
@@ -950,7 +998,7 @@ function PromptArchive({ data, setData }: { data: WorkroomData; setData: DataSet
             {REALISM_LOCK}
           </p>
           <button
-            className="mt-4 inline-flex items-center gap-2 rounded-[8px] border border-silver/50 bg-white/70 px-3 py-2 text-sm text-ink/70 hover:border-cherry/40"
+            className="mt-4 inline-flex items-center gap-2 rounded-[8px] border border-silver/40 bg-paper/75 px-3 py-2 text-sm text-ink/70 shadow-insetline transition hover:border-cherry/40 hover:text-cherry"
             onClick={copyRealismLock}
             type="button"
           >
@@ -1022,7 +1070,10 @@ function PromptArchive({ data, setData }: { data: WorkroomData; setData: DataSet
         <SectionTitle icon={Sparkles} title="prompt cards" />
         <div className="mt-5 grid gap-4">
           {data.prompts.map((prompt) => (
-            <div key={prompt.id} className="rounded-[8px] border border-silver/40 bg-white/70 p-4">
+            <div
+              key={prompt.id}
+              className="rounded-[8px] border border-silver/40 bg-paper/75 p-4 shadow-insetline"
+            >
               <div className="flex items-start justify-between gap-3">
                 <div>
                   <div className="flex flex-wrap gap-2">
@@ -1161,7 +1212,7 @@ function MoneyRoom({ data, setData }: { data: WorkroomData; setData: DataSetter 
               {data.moneyRecords.map((record) => (
                 <div
                   key={record.id}
-                  className="flex flex-col justify-between gap-3 rounded-[8px] border border-silver/40 bg-white/70 p-4 sm:flex-row sm:items-center"
+                  className="flex flex-col justify-between gap-3 rounded-[8px] border border-silver/40 bg-paper/75 p-4 shadow-insetline sm:flex-row sm:items-center"
                 >
                   <div>
                     <Badge tone={record.type === "income" ? "blue" : "cherry"}>
@@ -1272,7 +1323,10 @@ function WeeklyResetRoom({ data, setData }: { data: WorkroomData; setData: DataS
         <SectionTitle icon={Archive} title="reset archive" />
         <div className="mt-5 grid gap-4">
           {data.weeklyResets.map((reset) => (
-            <div key={reset.id} className="rounded-[8px] border border-silver/40 bg-white/70 p-4">
+            <div
+              key={reset.id}
+              className="rounded-[8px] border border-silver/40 bg-paper/75 p-4 shadow-insetline"
+            >
               <div className="flex items-start justify-between gap-3">
                 <div>
                   <Badge tone="blue">{reset.weekOf}</Badge>
@@ -1307,10 +1361,40 @@ function WeeklyResetRoom({ data, setData }: { data: WorkroomData; setData: DataS
   );
 }
 
+function MiniStat({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="rounded-[8px] border border-silver/30 bg-white/60 p-3 shadow-insetline">
+      <p className="text-[10px] uppercase tracking-[0.18em] text-ink/40">{label}</p>
+      <p className="mt-1 text-xl font-semibold leading-none">{value}</p>
+    </div>
+  );
+}
+
+function QuickActionButton({
+  icon: Icon,
+  label,
+  onClick,
+}: {
+  icon: LucideIcon;
+  label: string;
+  onClick: () => void;
+}) {
+  return (
+    <button
+      className="inline-flex items-center gap-2 rounded-[8px] border border-silver/40 bg-white/70 px-3.5 py-2 text-sm text-ink/70 shadow-insetline transition hover:border-cherry/40 hover:text-cherry"
+      onClick={onClick}
+      type="button"
+    >
+      <Icon className="h-4 w-4" />
+      {label}
+    </button>
+  );
+}
+
 function Panel({ children, className = "" }: { children: React.ReactNode; className?: string }) {
   return (
     <section
-      className={`rounded-[8px] border border-silver/40 bg-mist/90 p-5 shadow-editorial md:p-6 ${className}`}
+      className={`rounded-[8px] border border-silver/40 bg-mist/90 p-5 shadow-surface md:p-6 ${className}`}
     >
       {children}
     </section>
@@ -1318,16 +1402,18 @@ function Panel({ children, className = "" }: { children: React.ReactNode; classN
 }
 
 function TwoColumn({ children }: { children: React.ReactNode }) {
-  return <div className="grid gap-5 xl:grid-cols-[420px_1fr]">{children}</div>;
+  return <div className="grid gap-5 xl:grid-cols-[430px_1fr]">{children}</div>;
 }
 
 function SectionTitle({ icon: Icon, title }: { icon: LucideIcon; title: string }) {
   return (
     <div className="flex items-center gap-2">
-      <span className="flex h-8 w-8 items-center justify-center rounded-[8px] border border-silver/40 bg-white/70">
+      <span className="flex h-8 w-8 items-center justify-center rounded-[8px] border border-silver/40 bg-paper/80 shadow-insetline">
         <Icon className="h-4 w-4 text-cherry" />
       </span>
-      <h3 className="text-sm font-semibold uppercase text-ink/70">{title}</h3>
+      <h3 className="text-[13px] font-semibold uppercase tracking-[0.14em] text-ink/70">
+        {title}
+      </h3>
     </div>
   );
 }
@@ -1336,9 +1422,12 @@ function MetricGrid({ metrics }: { metrics: Array<[string, string]> }) {
   return (
     <div className="grid gap-3 sm:grid-cols-3">
       {metrics.map(([label, value]) => (
-        <div key={label} className="rounded-[8px] border border-silver/40 bg-white/70 p-4">
-          <p className="text-xs uppercase text-ink/50">{label}</p>
-          <p className="mt-2 break-words text-xl font-semibold">{value}</p>
+        <div
+          key={label}
+          className="rounded-[8px] border border-silver/40 bg-paper/80 p-4 shadow-insetline"
+        >
+          <p className="text-[11px] uppercase tracking-[0.18em] text-ink/40">{label}</p>
+          <p className="mt-3 break-words text-2xl font-semibold leading-none">{value}</p>
         </div>
       ))}
     </div>
@@ -1353,13 +1442,15 @@ function Badge({
   tone?: "silver" | "blue" | "cherry";
 }) {
   const toneClass = {
-    silver: "border-silver/50 bg-white/70 text-ink/60",
-    blue: "border-blue/60 bg-blue/20 text-ink",
+    silver: "border-silver/40 bg-paper/70 text-ink/60",
+    blue: "border-blue/60 bg-powder/75 text-ink",
     cherry: "border-cherry/40 bg-cherry/10 text-cherry",
   }[tone];
 
   return (
-    <span className={`inline-flex rounded-[8px] border px-2.5 py-1 text-xs ${toneClass}`}>
+    <span
+      className={`inline-flex rounded-[8px] border px-2.5 py-1 text-[11px] uppercase tracking-[0.12em] ${toneClass}`}
+    >
       {children}
     </span>
   );
@@ -1377,7 +1468,7 @@ function IconButton({
   return (
     <button
       aria-label={label}
-      className="flex h-10 w-10 items-center justify-center rounded-[8px] border border-silver/50 bg-white/70 text-ink/70 transition hover:border-cherry/40 hover:text-cherry"
+      className="flex h-10 w-10 items-center justify-center rounded-[8px] border border-silver/40 bg-paper/75 text-ink/70 shadow-insetline transition hover:border-cherry/40 hover:text-cherry"
       onClick={onClick}
       type="button"
     >
@@ -1403,7 +1494,7 @@ function FormActions({ editing, onCancel }: { editing: boolean; onCancel: () => 
   return (
     <div className="flex flex-wrap gap-2 pt-2">
       <button
-        className="inline-flex items-center gap-2 rounded-[8px] border border-cherry/40 bg-cherry px-4 py-2 text-sm font-medium text-white hover:bg-cherry/90"
+        className="inline-flex items-center gap-2 rounded-[8px] border border-cherry/40 bg-cherry px-4 py-2.5 text-sm font-medium text-white shadow-editorial transition hover:bg-cherry/90"
         type="submit"
       >
         <Save className="h-4 w-4" />
@@ -1411,7 +1502,7 @@ function FormActions({ editing, onCancel }: { editing: boolean; onCancel: () => 
       </button>
       {editing && (
         <button
-          className="inline-flex items-center gap-2 rounded-[8px] border border-silver/50 bg-white/70 px-4 py-2 text-sm text-ink/70 hover:bg-white"
+          className="inline-flex items-center gap-2 rounded-[8px] border border-silver/40 bg-paper/75 px-4 py-2.5 text-sm text-ink/70 transition hover:bg-white"
           onClick={onCancel}
           type="button"
         >
@@ -1430,10 +1521,10 @@ function TextField({
 }: InputHTMLAttributes<HTMLInputElement> & { label: string }) {
   return (
     <label className={`grid gap-2 text-sm ${className}`}>
-      <span className="text-xs uppercase text-ink/50">{label}</span>
+      <span className="text-[11px] uppercase tracking-[0.16em] text-ink/40">{label}</span>
       <input
         {...props}
-        className="min-h-11 w-full rounded-[8px] border border-silver/40 bg-white/75 px-3 py-2 text-ink outline-none transition placeholder:text-ink/30 focus:border-cherry/40"
+        className="min-h-12 w-full rounded-[8px] border border-silver/40 bg-paper/80 px-3.5 py-2.5 text-ink shadow-insetline outline-none transition placeholder:text-ink/30 focus:border-cherry/40 focus:bg-white"
       />
     </label>
   );
@@ -1446,10 +1537,10 @@ function TextAreaField({
 }: TextareaHTMLAttributes<HTMLTextAreaElement> & { label: string }) {
   return (
     <label className="grid gap-2 text-sm">
-      <span className="text-xs uppercase text-ink/50">{label}</span>
+      <span className="text-[11px] uppercase tracking-[0.16em] text-ink/40">{label}</span>
       <textarea
         {...props}
-        className="min-h-24 w-full resize-y rounded-[8px] border border-silver/40 bg-white/75 px-3 py-2 leading-6 text-ink outline-none transition placeholder:text-ink/30 focus:border-cherry/40"
+        className="min-h-28 w-full resize-y rounded-[8px] border border-silver/40 bg-paper/80 px-3.5 py-2.5 leading-6 text-ink shadow-insetline outline-none transition placeholder:text-ink/30 focus:border-cherry/40 focus:bg-white"
         rows={rows}
       />
     </label>
@@ -1463,10 +1554,10 @@ function SelectField({
 }: SelectHTMLAttributes<HTMLSelectElement> & { label: string; options: readonly string[] }) {
   return (
     <label className="grid gap-2 text-sm">
-      <span className="text-xs uppercase text-ink/50">{label}</span>
+      <span className="text-[11px] uppercase tracking-[0.16em] text-ink/40">{label}</span>
       <select
         {...props}
-        className="min-h-11 w-full rounded-[8px] border border-silver/40 bg-white/75 px-3 py-2 text-ink outline-none transition focus:border-cherry/40"
+        className="min-h-12 w-full rounded-[8px] border border-silver/40 bg-paper/80 px-3.5 py-2.5 text-ink shadow-insetline outline-none transition focus:border-cherry/40 focus:bg-white"
       >
         {options.map((option) => (
           <option key={option} value={option}>
@@ -1480,8 +1571,8 @@ function SelectField({
 
 function MetaRow({ label, value }: { label: string; value: string }) {
   return (
-    <div className="grid grid-cols-[88px_1fr] gap-3 border-t border-silver/40 pt-3">
-      <span className="text-xs uppercase text-ink/40">{label}</span>
+    <div className="grid grid-cols-[88px_1fr] gap-3 border-t border-silver/30 pt-3">
+      <span className="text-[11px] uppercase tracking-[0.14em] text-ink/40">{label}</span>
       <span className="min-w-0 break-words text-ink/70">{value}</span>
     </div>
   );
@@ -1502,14 +1593,14 @@ function MetaBlock({
     .filter((color) => color.startsWith("#"));
 
   return (
-    <div className="border-t border-silver/40 pt-3">
-      <p className="text-xs uppercase text-ink/40">{label}</p>
+    <div className="border-t border-silver/30 pt-3">
+      <p className="text-[11px] uppercase tracking-[0.14em] text-ink/40">{label}</p>
       {swatches && colors.length > 0 && (
         <div className="mt-3 flex flex-wrap gap-2">
           {colors.map((color) => (
             <span
               key={color}
-              className="h-7 w-7 rounded-[8px] border border-silver/40"
+              className="h-7 w-7 rounded-[8px] border border-silver/40 shadow-insetline"
               style={{ backgroundColor: color }}
               title={color}
             />
