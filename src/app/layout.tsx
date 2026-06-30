@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "NAYUL WORKROOM",
-  description: "A personal creative operating system for designers and students.",
+  title: "NAYUL OS",
+  description: "A private life operating system for goals, study, portfolio, career, money, and admin.",
 };
 
 export default function RootLayout({

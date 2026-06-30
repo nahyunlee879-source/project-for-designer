@@ -1,338 +1,346 @@
 import type {
-  ExperimentRecord,
-  FailureTag,
-  PipelineIdea,
-  PipelineStatus,
-  PortfolioSections,
-  ScoreSet,
-  StudioProject,
+  ActionPriority,
+  AdminItem,
+  CareerItem,
+  LifeArea,
+  LifeGoal,
+  MoneyRecord,
+  OsProject,
+  StudyRoute,
+  TodayAction,
+  WeeklyReview,
   WorkroomData,
 } from "./types";
 
-type CommandKind = "idea" | "project" | "experiment";
-
-export interface CommandItem {
+export interface HqItem {
   id: string;
-  kind: CommandKind;
   title: string;
   source: string;
+  area: LifeArea;
   detail: string;
   nextAction: string;
-  score?: number;
-  status?: string;
-  tags?: string;
+  score: number;
   deadline?: string;
-  projectId?: string;
+  status?: string;
 }
 
-export interface CommandRecommendations {
-  todaysNextMove: CommandItem | null;
-  portfolioWorthyConcepts: CommandItem[];
-  conceptsNeedingDecision: CommandItem[];
-  recentPromptFailures: CommandItem[];
-  highTasteFitIdeas: CommandItem[];
-  careerStudyActions: CommandItem[];
+export interface MoneySummary {
+  totalIncome: number;
+  totalExpense: number;
+  balance: number;
+  futureSpending: number;
+  wastedSpending: number;
+  studyAbroadSaved: number;
+  studyAbroadTarget: number;
+  freelanceIncome: number;
 }
 
-export interface IdeaRecommendation {
-  label: string;
-  detail: string;
-  tone: "cherry" | "blue" | "silver" | "ink";
+export interface LifeHqSummary {
+  topPriorities: HqItem[];
+  weeklyGoals: LifeGoal[];
+  urgentItems: HqItem[];
+  neglectedGoals: LifeGoal[];
+  studyStatus: HqItem[];
+  portfolioStatus: HqItem[];
+  moneySummary: MoneySummary;
+  careerStudyStatus: HqItem[];
+  todaysNextAction: HqItem | null;
+  riskSignals: HqItem[];
+  latestReview?: WeeklyReview;
 }
 
-const SCORE_WEIGHTS: Record<keyof ScoreSet, number> = {
-  tasteFit: 0.24,
-  portfolioPotential: 0.28,
-  brandDepth: 0.22,
-  monetizationPotential: 0.1,
-  careerUsefulness: 0.16,
-};
-
-const STATUS_BOOST: Record<PipelineStatus, number> = {
-  Raw: 0,
-  "Worth Keeping": 4,
-  "Needs Research": 2,
-  "Concept Candidate": 8,
-  "Visual Experiment": 10,
-  "Portfolio Candidate": 16,
-  "Brand System": 14,
-  Published: 0,
-  Archived: -35,
-};
-
-const FAILURE_GUIDES: Record<FailureTag, string> = {
-  "too cute": "Remove decorative sweetness and replace it with sharper posture, restraint, and clearer attitude.",
-  "too generic": "Anchor the direction in one ownable material, behavior, or audience-specific rule.",
-  "too bridal": "Reduce wedding-hall signals and move toward private ritual, material texture, and service detail.",
-  "too AI-looking": "Add realistic human imperfection, uneven texture, believable hands, and less polished posing.",
-  "too flat": "Create contrast through depth, hierarchy, cropping, movement, or a stronger product moment.",
-  "too commercial": "Pull back from campaign cliches and use a more editorial, personal, and specific point of view.",
-  "too vulgar": "Keep confidence but control exposure, styling, and language so the brand still feels intentional.",
-  "brand DNA mismatch": "Return to the project DNA before adding style, and remove any visual that breaks the core identity.",
-  "not portfolio-worthy": "Clarify the design decision, the before/after change, and what the reviewer should learn from it.",
+const PRIORITY_WEIGHT: Record<ActionPriority, number> = {
+  Low: 8,
+  Medium: 18,
+  High: 30,
+  Critical: 42,
 };
 
 function clamp(value: number, min: number, max: number) {
   return Math.min(max, Math.max(min, value));
 }
 
-function scoreValue(value: number) {
-  return clamp(Number.isFinite(value) ? value : 1, 1, 10);
+export function daysUntil(date: string) {
+  if (!date) {
+    return Number.POSITIVE_INFINITY;
+  }
+
+  const due = new Date(`${date}T00:00:00`).getTime();
+  if (Number.isNaN(due)) {
+    return Number.POSITIVE_INFINITY;
+  }
+
+  const today = new Date().setHours(0, 0, 0, 0);
+  return Math.ceil((due - today) / 86_400_000);
 }
 
-function dateUrgency(deadline?: string) {
-  if (!deadline) {
+export function dateUrgency(date: string) {
+  const days = daysUntil(date);
+  if (!Number.isFinite(days)) {
     return 0;
   }
-
-  const due = new Date(`${deadline}T00:00:00`).getTime();
-  if (Number.isNaN(due)) {
-    return 0;
-  }
-
-  const now = new Date().setHours(0, 0, 0, 0);
-  const days = Math.ceil((due - now) / 86_400_000);
   if (days < 0) {
-    return 10;
+    return 28;
   }
-  if (days <= 3) {
-    return 8;
+  if (days <= 2) {
+    return 25;
   }
   if (days <= 7) {
-    return 5;
+    return 18;
+  }
+  if (days <= 21) {
+    return 10;
   }
   return 0;
 }
 
-export function calculatePriorityScore(scores: ScoreSet) {
-  const weightedScore = Object.entries(SCORE_WEIGHTS).reduce((total, [key, weight]) => {
-    const scoreKey = key as keyof ScoreSet;
-    return total + scoreValue(scores[scoreKey]) * weight;
-  }, 0);
-
-  return Math.round(clamp(weightedScore * 10, 0, 100));
+export function getGoalById(goals: LifeGoal[], goalId: string) {
+  return goals.find((goal) => goal.id === goalId);
 }
 
-export function calculateIdeaPriority(idea: PipelineIdea) {
+export function getProjectById(projects: OsProject[], projectId: string) {
+  return projects.find((project) => project.id === projectId);
+}
+
+export function getGoalRisk(goal: LifeGoal) {
+  const days = daysUntil(goal.targetDate);
+  const remaining = 100 - goal.progressPercentage;
+
+  if (goal.currentStage === "Completed") {
+    return { level: "stable", score: 0, label: "complete" };
+  }
+
+  const timePressure =
+    days < 0 ? 45 : days <= 14 ? 34 : days <= 45 ? 24 : days <= 90 ? 15 : days <= 180 ? 8 : 0;
+  const progressPressure =
+    goal.progressPercentage < 20 ? 30 : goal.progressPercentage < 40 ? 20 : goal.progressPercentage < 65 ? 10 : 0;
+  const pausedPressure = goal.currentStage === "Paused" || goal.currentStage === "Waiting" ? 16 : 0;
+  const score = clamp(timePressure + progressPressure + pausedPressure + goal.importance * 2, 0, 100);
+
+  if (score >= 72 || (days <= 45 && remaining >= 60)) {
+    return { level: "high", score, label: "at risk" };
+  }
+  if (score >= 50) {
+    return { level: "medium", score, label: "watch" };
+  }
+  return { level: "low", score, label: "steady" };
+}
+
+export function calculateActionPriority(action: TodayAction, goals: LifeGoal[], projects: OsProject[]) {
+  const goal = getGoalById(goals, action.linkedGoalId);
+  const project = getProjectById(projects, action.linkedProjectId);
+  const goalBoost = goal ? goal.importance * 4 + getGoalRisk(goal).score * 0.18 : 0;
+  const projectBoost = project ? project.careerRelevance * 2 + project.portfolioPotential * 1.2 : 0;
+  const statusBoost = action.status === "Today" ? 12 : action.status === "In Progress" ? 8 : 0;
+
   return Math.round(
-    clamp(calculatePriorityScore(idea) + STATUS_BOOST[idea.currentStatus] + dateUrgency(idea.deadline), 0, 100),
+    clamp(
+      PRIORITY_WEIGHT[action.priority] +
+        action.importance * 3 +
+        dateUrgency(action.dueDate) +
+        goalBoost +
+        projectBoost +
+        statusBoost,
+      0,
+      100,
+    ),
   );
 }
 
-export function calculateProjectPriority(project: StudioProject) {
-  return Math.round(clamp(calculatePriorityScore(project) + dateUrgency(project.deadline), 0, 100));
+export function calculateProjectPriority(project: OsProject, goals: LifeGoal[]) {
+  const linkedGoalBoost = project.linkedGoalIds.reduce((total, goalId) => {
+    const goal = getGoalById(goals, goalId);
+    return total + (goal ? goal.importance * 2 + getGoalRisk(goal).score * 0.1 : 0);
+  }, 0);
+
+  return Math.round(
+    clamp(
+      project.portfolioPotential * 2.4 +
+        project.monetizationPotential * 1.4 +
+        project.careerRelevance * 2.2 +
+        dateUrgency(project.deadline) +
+        linkedGoalBoost,
+      0,
+      100,
+    ),
+  );
 }
 
-export function getIdeaRecommendation(idea: PipelineIdea): IdeaRecommendation {
-  const priority = calculateIdeaPriority(idea);
-
-  if (idea.currentStatus === "Archived" || priority < 45) {
-    return {
-      label: "archive",
-      detail: "Low current return. Keep only if it protects a useful taste rule.",
-      tone: "silver",
-    };
-  }
-
-  if (idea.currentStatus === "Portfolio Candidate" || (idea.portfolioPotential >= 8 && priority >= 78)) {
-    return {
-      label: "portfolio candidate",
-      detail: "Strong enough to become a case section or interview example.",
-      tone: "cherry",
-    };
-  }
-
-  if (idea.brandDepth >= 8 && idea.currentStatus !== "Published") {
-    return {
-      label: "brand system",
-      detail: "Turn this into repeatable DNA, rules, references, and prompt tests.",
-      tone: "ink",
-    };
-  }
-
-  if (idea.currentStatus === "Needs Research") {
-    return {
-      label: "research next",
-      detail: "Decode references before investing in visuals.",
-      tone: "blue",
-    };
-  }
+export function getMoneySummary(records: MoneyRecord[]): MoneySummary {
+  const incomeTypes = new Set<MoneyRecord["recordType"]>(["income", "saving", "freelance"]);
+  const totalIncome = records
+    .filter((record) => incomeTypes.has(record.recordType))
+    .reduce((total, record) => total + record.amount, 0);
+  const totalExpense = records
+    .filter((record) => !incomeTypes.has(record.recordType))
+    .reduce((total, record) => total + record.amount, 0);
+  const futureSpending = records
+    .filter((record) => record.futureInvestment)
+    .reduce((total, record) => total + record.amount, 0);
+  const wastedSpending = records
+    .filter((record) => record.wasted)
+    .reduce((total, record) => total + record.amount, 0);
+  const studyAbroadSaved = records
+    .filter((record) => record.connectedGoalId === "goal-study-abroad-savings")
+    .reduce((total, record) => total + (incomeTypes.has(record.recordType) ? record.amount : -record.amount), 0);
+  const freelanceIncome = records
+    .filter((record) => record.recordType === "freelance" || record.category.toLowerCase().includes("freelance"))
+    .reduce((total, record) => total + record.amount, 0);
 
   return {
-    label: "develop next",
-    detail: "Worth another experiment because the score and direction are aligned.",
-    tone: "blue",
+    totalIncome,
+    totalExpense,
+    balance: totalIncome - totalExpense,
+    futureSpending,
+    wastedSpending,
+    studyAbroadSaved,
+    studyAbroadTarget: 1_600_000,
+    freelanceIncome,
   };
 }
 
-function projectName(projects: StudioProject[], projectId?: string) {
-  return projects.find((project) => project.id === projectId)?.name ?? "Unlinked";
-}
+function actionToHqItem(action: TodayAction, data: WorkroomData): HqItem {
+  const goal = getGoalById(data.goals, action.linkedGoalId);
+  const project = getProjectById(data.projects, action.linkedProjectId);
 
-function ideaToCommandItem(idea: PipelineIdea, projects: StudioProject[]): CommandItem {
   return {
-    id: idea.id,
-    kind: "idea",
-    title: idea.title,
-    source: projectName(projects, idea.linkedProjectId),
-    detail: idea.reasonWhyThisMatters,
-    nextAction: idea.nextAction,
-    score: calculateIdeaPriority(idea),
-    status: idea.currentStatus,
-    tags: idea.tags,
-    deadline: idea.deadline,
-    projectId: idea.linkedProjectId,
+    id: action.id,
+    title: action.actionTitle,
+    source: project?.projectTitle ?? goal?.goalTitle ?? "Unlinked",
+    area: action.area,
+    detail: action.whyThisMatters,
+    nextAction: action.status === "Done" ? "Already done. Capture the progress update." : action.whyThisMatters,
+    score: calculateActionPriority(action, data.goals, data.projects),
+    deadline: action.dueDate,
+    status: action.status,
   };
 }
 
-function projectToCommandItem(project: StudioProject): CommandItem {
+function projectToHqItem(project: OsProject, data: WorkroomData): HqItem {
   return {
     id: project.id,
-    kind: "project",
-    title: project.name,
-    source: project.category,
-    detail: project.coreIdentity,
-    nextAction: project.nextMoves[0] ?? "Choose the next decision this project needs.",
-    score: calculateProjectPriority(project),
-    status: project.status,
+    title: project.projectTitle,
+    source: project.projectType,
+    area: project.area,
+    detail: project.currentProblem,
+    nextAction: project.nextAction,
+    score: calculateProjectPriority(project, data.goals),
     deadline: project.deadline,
-    projectId: project.id,
+    status: project.status,
   };
 }
 
-function experimentToCommandItem(experiment: ExperimentRecord, projects: StudioProject[]): CommandItem {
-  const failureText = experiment.failureTags.length
-    ? experiment.failureTags.join(", ")
-    : "needs result review";
+function adminToHqItem(item: AdminItem, data: WorkroomData): HqItem {
+  const goal = getGoalById(data.goals, item.linkedGoalId);
 
   return {
-    id: experiment.id,
-    kind: "experiment",
-    title: experiment.experimentTitle,
-    source: projectName(projects, experiment.linkedProjectId),
-    detail: `Rating ${experiment.resultRating}/10. Failure signals: ${failureText}.`,
-    nextAction: experiment.nextRevision,
-    score: experiment.resultRating,
-    status: experiment.experimentType,
-    tags: failureText,
-    projectId: experiment.linkedProjectId,
+    id: item.id,
+    title: item.itemTitle,
+    source: goal?.goalTitle ?? item.adminType,
+    area: "Life Admin",
+    detail: item.memo,
+    nextAction: `Open ${item.locationLink} and move status from ${item.status}.`,
+    score: clamp(dateUrgency(item.deadline) + (goal?.importance ?? 5) * 6, 0, 100),
+    deadline: item.deadline,
+    status: item.status,
   };
 }
 
-function sortCommandItems(items: CommandItem[]) {
-  return [...items].sort((a, b) => (b.score ?? 0) - (a.score ?? 0));
-}
-
-export function getCommandRecommendations(data: WorkroomData): CommandRecommendations {
-  const activeIdeas = data.ideas.filter((idea) => !["Archived", "Published"].includes(idea.currentStatus));
-  const ideaItems = activeIdeas.map((idea) => ideaToCommandItem(idea, data.projects));
-  const projectItems = data.projects.map(projectToCommandItem);
-  const experimentFailures = data.experiments
-    .filter((experiment) => experiment.resultRating <= 7 || experiment.failureTags.length > 0)
-    .sort((a, b) => b.createdAt.localeCompare(a.createdAt))
-    .map((experiment) => experimentToCommandItem(experiment, data.projects));
-
-  const portfolioWorthyConcepts = sortCommandItems([
-    ...activeIdeas
-      .filter(
-        (idea) =>
-          idea.currentStatus === "Portfolio Candidate" ||
-          idea.portfolioPotential >= 8 ||
-          getIdeaRecommendation(idea).label === "portfolio candidate",
-      )
-      .map((idea) => ideaToCommandItem(idea, data.projects)),
-    ...data.projects.filter((project) => project.portfolioPotential >= 8).map(projectToCommandItem),
-  ]).slice(0, 5);
-
-  const conceptsNeedingDecision = sortCommandItems([
-    ...activeIdeas
-      .filter((idea) =>
-        ["Worth Keeping", "Needs Research", "Concept Candidate", "Visual Experiment", "Brand System"].includes(
-          idea.currentStatus,
-        ),
-      )
-      .map((idea) => ideaToCommandItem(idea, data.projects)),
-    ...data.projects
-      .filter((project) => ["Idea", "Developing", "Experimenting", "Portfolio Build"].includes(project.status))
-      .map(projectToCommandItem),
-  ]).slice(0, 5);
-
-  const highTasteFitIdeas = sortCommandItems(
-    activeIdeas.filter((idea) => idea.tasteFit >= 8).map((idea) => ideaToCommandItem(idea, data.projects)),
-  ).slice(0, 5);
-
-  const careerStudyActions = sortCommandItems([
-    ...activeIdeas
-      .filter(
-        (idea) =>
-          ["Career", "Study Abroad", "Language"].includes(idea.category) || idea.careerUsefulness >= 8,
-      )
-      .map((idea) => ideaToCommandItem(idea, data.projects)),
-    ...data.projects.filter((project) => project.careerUsefulness >= 8).map(projectToCommandItem),
-  ]).slice(0, 5);
-
-  const todaysNextMove =
-    sortCommandItems([
-      ...ideaItems.map((item) => ({ ...item, score: (item.score ?? 0) + dateUrgency(item.deadline) })),
-      ...projectItems.map((item) => ({ ...item, score: (item.score ?? 0) + dateUrgency(item.deadline) })),
-    ])[0] ?? null;
+function careerToHqItem(item: CareerItem, data: WorkroomData): HqItem {
+  const project = getProjectById(data.projects, item.linkedProjectId);
 
   return {
-    todaysNextMove,
-    portfolioWorthyConcepts,
-    conceptsNeedingDecision,
-    recentPromptFailures: experimentFailures.slice(0, 5),
-    highTasteFitIdeas,
-    careerStudyActions,
+    id: item.id,
+    title: item.opportunityTitle,
+    source: item.companyPlatform,
+    area: "Career",
+    detail: item.portfolioConnection,
+    nextAction: item.nextAction,
+    score: clamp(item.careerRelevance * 7 + dateUrgency(item.deadline) + (project?.portfolioPotential ?? 0) * 1.5, 0, 100),
+    deadline: item.deadline,
+    status: item.status,
   };
 }
 
-export function generateNextRevisionDirection(
-  experiment: Pick<
-    ExperimentRecord,
-    "experimentType" | "originalDirection" | "revisedDirection" | "whatFailed" | "failureTags"
-  >,
-  project?: StudioProject,
-) {
-  const projectAnchor = project
-    ? `${project.name} should protect this DNA: ${project.coreIdentity} Include ${project.mustInclude} Avoid ${project.mustAvoid}`
-    : "Protect the linked project DNA before adding style.";
-  const failureDirections = experiment.failureTags.length
-    ? experiment.failureTags.map((tag) => FAILURE_GUIDES[tag]).join(" ")
-    : "Name the exact visual decision that improved the direction and remove anything that does not support it.";
-  const revisedAnchor = experiment.revisedDirection || experiment.originalDirection;
-
-  return `${projectAnchor} For the next ${experiment.experimentType.toLowerCase()} revision, start from "${revisedAnchor}". ${failureDirections} End with one concrete output that can be judged in a portfolio review.`;
-}
-
-export function buildPortfolioDraft(project: StudioProject, experiments: ExperimentRecord[]): PortfolioSections {
-  const linkedExperiments = experiments.filter((experiment) => experiment.linkedProjectId === project.id);
-  const usableExperiments = linkedExperiments.filter((experiment) => experiment.usableForPortfolio === "Yes");
-  const experimentSummary = linkedExperiments.length
-    ? linkedExperiments
-        .map(
-          (experiment) =>
-            `${experiment.experimentTitle}: ${experiment.resultRating}/10. Worked: ${experiment.whatWorked} Failed: ${experiment.whatFailed} Next: ${experiment.nextRevision}`,
-        )
-        .join("\n")
-    : "No experiments are connected yet. Add one in Experiment Lab to make this case less speculative.";
-  const referenceSummary = project.references.length
-    ? project.references.map((reference) => `${reference.title}: borrow ${reference.borrow}; avoid ${reference.avoidCopying}`).join("\n")
-    : "Reference rules are not defined yet.";
-  const reviewSummary = project.resultReviews.length
-    ? project.resultReviews.map((review) => `${review.title}: ${review.decision}`).join("\n")
-    : "No result reviews yet.";
+function studyToHqItem(route: StudyRoute, data: WorkroomData): HqItem {
+  const goal = getGoalById(data.goals, route.linkedGoalId);
 
   return {
-    projectOverview: `${project.name} is ${project.coreIdentity}`,
-    problemIntention: project.problemIntention,
-    target: project.target,
-    brandSystem: `Core identity: ${project.coreIdentity}\nMust include: ${project.mustInclude}\nMust avoid: ${project.mustAvoid}`,
-    visualDirection: `${project.visualCodes}\nReference logic:\n${referenceSummary}`,
-    experiments: experimentSummary,
-    deliverables: project.deliverables,
-    portfolioDescription: `${project.portfolioUsage} Usable experiments: ${usableExperiments.length}/${linkedExperiments.length}.`,
-    interviewTalkingPoints: `Explain why this project matters: ${project.problemIntention}\nShow how the DNA controlled decisions: ${project.mustInclude}\nDiscuss result reviews:\n${reviewSummary}`,
-    nextExpansion: project.nextMoves.join("\n"),
+    id: route.id,
+    title: route.subjectLanguage,
+    source: `${route.currentLevel} -> ${route.targetLevel}`,
+    area: route.area,
+    detail: route.weakPoints,
+    nextAction: route.todaysStudyAction,
+    score: clamp((goal?.importance ?? 6) * 7 + route.studyStreak * 1.5 + (goal ? getGoalRisk(goal).score * 0.2 : 0), 0, 100),
+    status: `${route.studyStreak} day streak`,
   };
+}
+
+function sortItems(items: HqItem[]) {
+  return [...items].sort((a, b) => b.score - a.score);
+}
+
+export function getLifeHqSummary(data: WorkroomData): LifeHqSummary {
+  const actionItems = data.todayActions
+    .filter((action) => action.status !== "Done")
+    .map((action) => actionToHqItem(action, data));
+  const projectItems = data.projects.map((project) => projectToHqItem(project, data));
+  const adminItems = data.adminItems
+    .filter((item) => item.status !== "Done")
+    .map((item) => adminToHqItem(item, data));
+  const careerItems = data.careerItems.map((item) => careerToHqItem(item, data));
+  const studyItems = data.studyRoutes.map((route) => studyToHqItem(route, data));
+  const allDecisionItems = [...actionItems, ...projectItems, ...adminItems, ...careerItems, ...studyItems];
+
+  const neglectedGoals = [...data.goals]
+    .filter((goal) => goal.currentStage !== "Completed")
+    .sort((a, b) => {
+      const aLinks = a.linkedTaskIds.length + a.linkedProjectIds.length + a.linkedDocumentIds.length;
+      const bLinks = b.linkedTaskIds.length + b.linkedProjectIds.length + b.linkedDocumentIds.length;
+      return a.progressPercentage - b.progressPercentage || aLinks - bLinks;
+    })
+    .slice(0, 4);
+
+  const riskSignals = data.goals
+    .map((goal) => {
+      const risk = getGoalRisk(goal);
+      return {
+        id: goal.id,
+        title: goal.goalTitle,
+        source: goal.currentStage,
+        area: goal.area,
+        detail: `${goal.progressPercentage}% progress, target ${goal.targetDate}. Risk level: ${risk.label}.`,
+        nextAction: goal.nextMilestone,
+        score: risk.score,
+        deadline: goal.targetDate,
+        status: risk.label,
+      };
+    })
+    .filter((item) => item.score >= 45);
+
+  return {
+    topPriorities: sortItems(actionItems).slice(0, 3),
+    weeklyGoals: [...data.goals]
+      .filter((goal) => goal.currentStage !== "Completed")
+      .sort((a, b) => b.importance - a.importance || getGoalRisk(b).score - getGoalRisk(a).score)
+      .slice(0, 3),
+    urgentItems: sortItems([...actionItems, ...adminItems, ...careerItems].filter((item) => dateUrgency(item.deadline ?? "") >= 10)).slice(0, 5),
+    neglectedGoals,
+    studyStatus: sortItems(studyItems).slice(0, 3),
+    portfolioStatus: sortItems(projectItems.filter((item) => item.area === "Portfolio" || item.area === "Creative")).slice(0, 4),
+    moneySummary: getMoneySummary(data.moneyRecords),
+    careerStudyStatus: sortItems([...careerItems, ...studyItems]).slice(0, 5),
+    todaysNextAction: sortItems(allDecisionItems)[0] ?? null,
+    riskSignals: sortItems(riskSignals).slice(0, 5),
+    latestReview: [...data.weeklyReviews].sort((a, b) => b.weekOf.localeCompare(a.weekOf))[0],
+  };
+}
+
+export function formatMoney(value: number) {
+  return new Intl.NumberFormat("ko-KR", {
+    style: "currency",
+    currency: "KRW",
+    maximumFractionDigits: 0,
+  }).format(value);
 }

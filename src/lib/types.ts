@@ -1,215 +1,283 @@
-export type IdeaCategory =
-  | "Brand"
-  | "Portfolio"
-  | "Prompt"
-  | "Content"
-  | "Career"
-  | "Study Abroad"
+export type LifeArea =
+  | "Study"
   | "Language"
+  | "Career"
+  | "Portfolio"
+  | "Creative"
   | "Money"
-  | "Music/IP";
+  | "Life Admin"
+  | "Content"
+  | "Health"
+  | "Long Term";
 
-export type PipelineStatus =
-  | "Raw"
-  | "Worth Keeping"
-  | "Needs Research"
-  | "Concept Candidate"
-  | "Visual Experiment"
-  | "Portfolio Candidate"
-  | "Brand System"
-  | "Published"
-  | "Archived";
+export type GoalStage =
+  | "Planning"
+  | "Active"
+  | "Building"
+  | "Waiting"
+  | "Review"
+  | "Paused"
+  | "Completed"
+  | "At Risk";
+
+export type ActionPriority = "Low" | "Medium" | "High" | "Critical";
+
+export type EnergyLevel = "low" | "medium" | "high";
+
+export type ActionStatus = "Queued" | "Today" | "In Progress" | "Waiting" | "Done";
 
 export type ProjectStatus =
   | "Idea"
-  | "Developing"
-  | "Experimenting"
-  | "Portfolio Build"
-  | "Published"
+  | "Planning"
+  | "Active"
+  | "Blocked"
+  | "Review"
+  | "Portfolio Ready"
+  | "Done"
   | "Paused";
 
-export type ExperimentType =
-  | "Prompt"
-  | "Visual Direction"
-  | "Product Idea"
-  | "Portfolio Text"
-  | "Content Caption";
+export type ProjectType = "Design" | "Portfolio" | "Freelance" | "App" | "Brand" | "Content" | "Admin";
 
-export type FailureTag =
-  | "too cute"
-  | "too generic"
-  | "too bridal"
-  | "too AI-looking"
-  | "too flat"
-  | "too commercial"
-  | "too vulgar"
-  | "brand DNA mismatch"
-  | "not portfolio-worthy";
+export type MoneyRecordType = "income" | "expense" | "saving" | "investment" | "subscription" | "freelance";
 
-export type PortfolioUsable = "Yes" | "No";
+export type CareerType = "job" | "freelance" | "portfolio" | "SNS" | "platform" | "application";
 
-export interface ScoreSet {
-  tasteFit: number;
-  portfolioPotential: number;
-  brandDepth: number;
-  monetizationPotential: number;
-  careerUsefulness: number;
-}
+export type CareerStatus =
+  | "Researching"
+  | "Preparing"
+  | "Drafting"
+  | "Applied"
+  | "Interview"
+  | "Waiting"
+  | "Accepted"
+  | "Rejected"
+  | "Paused";
 
-export interface PipelineIdea extends ScoreSet {
+export type AdminType =
+  | "document"
+  | "visa"
+  | "school"
+  | "account"
+  | "contract"
+  | "certificate"
+  | "subscription"
+  | "health"
+  | "travel";
+
+export type AdminStatus = "Needed" | "Collecting" | "Submitted" | "Waiting" | "Done" | "Expired";
+
+export interface LifeGoal {
   id: string;
-  title: string;
-  rawIdea: string;
-  category: IdeaCategory;
-  linkedProjectId: string;
-  currentStatus: PipelineStatus;
-  nextAction: string;
-  reasonWhyThisMatters: string;
-  tags: string;
-  deadline: string;
-}
-
-export interface ProjectStandard {
-  id: string;
-  title: string;
-  rule: string;
-  type: "Visual Rule" | "Brand Rule" | "Writing Rule" | "Career Rule";
-}
-
-export interface ProjectReference {
-  id: string;
-  title: string;
+  goalTitle: string;
+  area: LifeArea;
   whyItMatters: string;
-  borrow: string;
-  avoidCopying: string;
-  tags: string;
+  targetDate: string;
+  currentStage: GoalStage;
+  nextMilestone: string;
+  progressPercentage: number;
+  importance: number;
+  linkedProjectIds: string[];
+  linkedTaskIds: string[];
+  linkedMoneyRecordIds: string[];
+  linkedDocumentIds: string[];
 }
 
-export interface ResultReview {
+export interface TodayAction {
   id: string;
-  title: string;
-  score: number;
-  whatChanged: string;
-  decision: string;
+  actionTitle: string;
+  linkedGoalId: string;
+  linkedProjectId: string;
+  area: LifeArea;
+  priority: ActionPriority;
+  importance: number;
+  estimatedTime: string;
+  energyLevel: EnergyLevel;
+  dueDate: string;
+  status: ActionStatus;
+  whyThisMatters: string;
 }
 
-export interface StudioProject extends ScoreSet {
+export interface OsProject {
   id: string;
-  name: string;
+  projectTitle: string;
+  projectType: ProjectType;
+  area: LifeArea;
+  purpose: string;
+  currentProblem: string;
+  nextAction: string;
+  portfolioPotential: number;
+  monetizationPotential: number;
+  careerRelevance: number;
+  linkedGoalIds: string[];
+  relatedNotes: string;
   status: ProjectStatus;
   deadline: string;
-  category: IdeaCategory;
-  coreIdentity: string;
-  target: string;
-  problemIntention: string;
-  mustInclude: string;
-  mustAvoid: string;
-  visualCodes: string;
-  portfolioUsage: string;
-  deliverables: string;
-  nextMoves: string[];
-  standards: ProjectStandard[];
-  references: ProjectReference[];
-  resultReviews: ResultReview[];
 }
 
-export interface ExperimentRecord {
+export interface StudyRoute {
   id: string;
-  experimentTitle: string;
+  subjectLanguage: string;
+  area: LifeArea;
+  currentLevel: string;
+  targetLevel: string;
+  studyPurpose: string;
+  todaysStudyAction: string;
+  reviewItems: string;
+  weakPoints: string;
+  linkedGoalId: string;
+  studyStreak: number;
+  notes: string;
+}
+
+export interface MoneyRecord {
+  id: string;
+  recordType: MoneyRecordType;
+  amount: number;
+  category: string;
+  connectedGoalId: string;
+  connectedProjectId: string;
+  date: string;
+  memo: string;
+  futureInvestment: boolean;
+  wasted: boolean;
+}
+
+export interface CareerItem {
+  id: string;
+  opportunityTitle: string;
+  type: CareerType;
+  companyPlatform: string;
+  status: CareerStatus;
+  deadline: string;
+  portfolioConnection: string;
+  careerRelevance: number;
+  nextAction: string;
+  notes: string;
+  linkedGoalId: string;
   linkedProjectId: string;
-  experimentType: ExperimentType;
-  originalDirection: string;
-  revisedDirection: string;
-  resultRating: number;
-  whatWorked: string;
-  whatFailed: string;
-  failureTags: FailureTag[];
-  nextRevision: string;
-  usableForPortfolio: PortfolioUsable;
-  createdAt: string;
 }
 
-export interface PortfolioSections {
-  projectOverview: string;
-  problemIntention: string;
-  target: string;
-  brandSystem: string;
-  visualDirection: string;
-  experiments: string;
-  deliverables: string;
-  portfolioDescription: string;
-  interviewTalkingPoints: string;
-  nextExpansion: string;
-}
-
-export interface PortfolioCase {
+export interface AdminItem {
   id: string;
-  projectId: string;
-  sections: PortfolioSections;
-  updatedAt: string;
+  itemTitle: string;
+  adminType: AdminType;
+  status: AdminStatus;
+  deadline: string;
+  linkedGoalId: string;
+  linkedProjectId: string;
+  locationLink: string;
+  memo: string;
+}
+
+export interface WeeklyReview {
+  id: string;
+  weekOf: string;
+  mostProgressedArea: LifeArea;
+  mostNeglectedArea: LifeArea;
+  moneySummary: string;
+  studySummary: string;
+  portfolioCareerSummary: string;
+  nextWeekTopThree: string[];
+  riskSignals: string;
+  routinesToKeep: string;
+  progressUpdate: string;
 }
 
 export interface WorkroomData {
-  ideas: PipelineIdea[];
-  projects: StudioProject[];
-  experiments: ExperimentRecord[];
-  portfolioCases: PortfolioCase[];
+  goals: LifeGoal[];
+  todayActions: TodayAction[];
+  projects: OsProject[];
+  studyRoutes: StudyRoute[];
+  moneyRecords: MoneyRecord[];
+  careerItems: CareerItem[];
+  adminItems: AdminItem[];
+  weeklyReviews: WeeklyReview[];
 }
 
-export const IDEA_CATEGORIES: IdeaCategory[] = [
-  "Brand",
-  "Portfolio",
-  "Prompt",
-  "Content",
-  "Career",
-  "Study Abroad",
+export const LIFE_AREAS: LifeArea[] = [
+  "Study",
   "Language",
+  "Career",
+  "Portfolio",
+  "Creative",
   "Money",
-  "Music/IP",
+  "Life Admin",
+  "Content",
+  "Health",
+  "Long Term",
 ];
 
-export const PIPELINE_STATUSES: PipelineStatus[] = [
-  "Raw",
-  "Worth Keeping",
-  "Needs Research",
-  "Concept Candidate",
-  "Visual Experiment",
-  "Portfolio Candidate",
-  "Brand System",
-  "Published",
-  "Archived",
+export const GOAL_STAGES: GoalStage[] = [
+  "Planning",
+  "Active",
+  "Building",
+  "Waiting",
+  "Review",
+  "Paused",
+  "Completed",
+  "At Risk",
+];
+
+export const ACTION_PRIORITIES: ActionPriority[] = ["Low", "Medium", "High", "Critical"];
+
+export const ENERGY_LEVELS: EnergyLevel[] = ["low", "medium", "high"];
+
+export const ACTION_STATUSES: ActionStatus[] = ["Queued", "Today", "In Progress", "Waiting", "Done"];
+
+export const PROJECT_TYPES: ProjectType[] = [
+  "Design",
+  "Portfolio",
+  "Freelance",
+  "App",
+  "Brand",
+  "Content",
+  "Admin",
 ];
 
 export const PROJECT_STATUSES: ProjectStatus[] = [
   "Idea",
-  "Developing",
-  "Experimenting",
-  "Portfolio Build",
-  "Published",
+  "Planning",
+  "Active",
+  "Blocked",
+  "Review",
+  "Portfolio Ready",
+  "Done",
   "Paused",
 ];
 
-export const EXPERIMENT_TYPES: ExperimentType[] = [
-  "Prompt",
-  "Visual Direction",
-  "Product Idea",
-  "Portfolio Text",
-  "Content Caption",
+export const MONEY_RECORD_TYPES: MoneyRecordType[] = [
+  "income",
+  "expense",
+  "saving",
+  "investment",
+  "subscription",
+  "freelance",
 ];
 
-export const FAILURE_TAGS: FailureTag[] = [
-  "too cute",
-  "too generic",
-  "too bridal",
-  "too AI-looking",
-  "too flat",
-  "too commercial",
-  "too vulgar",
-  "brand DNA mismatch",
-  "not portfolio-worthy",
+export const CAREER_TYPES: CareerType[] = ["job", "freelance", "portfolio", "SNS", "platform", "application"];
+
+export const CAREER_STATUSES: CareerStatus[] = [
+  "Researching",
+  "Preparing",
+  "Drafting",
+  "Applied",
+  "Interview",
+  "Waiting",
+  "Accepted",
+  "Rejected",
+  "Paused",
 ];
 
-export const PORTFOLIO_USABLE_OPTIONS: PortfolioUsable[] = ["Yes", "No"];
+export const ADMIN_TYPES: AdminType[] = [
+  "document",
+  "visa",
+  "school",
+  "account",
+  "contract",
+  "certificate",
+  "subscription",
+  "health",
+  "travel",
+];
 
-export const REALISM_LOCK =
-  "Human first, styling second. Natural skin texture, subtle asymmetry, realistic hands, flyaway hair, imperfect posture, believable facial expression. Avoid doll-like face, plastic skin, stiff posing, AI-glam perfection.";
+export const ADMIN_STATUSES: AdminStatus[] = ["Needed", "Collecting", "Submitted", "Waiting", "Done", "Expired"];

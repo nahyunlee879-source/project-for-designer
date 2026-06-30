@@ -1,8 +1,22 @@
-# NAYUL WORKROOM
+# NAYUL OS
 
-NAYUL WORKROOM은 일반 투두앱이나 노션 클론이 아니라, 한 명의 디자이너가 아이디어를 수집하고 판단한 뒤 브랜드 DNA, 실험, 포트폴리오, 커리어 액션으로 발전시키는 개인 크리에이티브 디렉터 시스템 MVP입니다.
+NAYUL OS는 단순 생산성 앱, 투두앱, 가계부, 단어장, 포트폴리오 정리 앱이 아닙니다.
 
-Supabase, 로그인, 외부 AI/API 없이 브라우저의 `localStorage`만 사용합니다.
+한 사람의 공부, 언어, 유학, 취업, 포트폴리오, 디자인 프로젝트, 외주, 돈, 일정, 서류, 콘텐츠, 장기 목표를 하나로 연결해서 관리하는 개인 인생 운영체제 MVP입니다.
+
+핵심 흐름:
+
+```text
+Long-term Goal
+-> Project / Area
+-> Milestone
+-> Task
+-> Today Action
+-> Weekly Review
+-> Progress Update
+```
+
+Supabase, 로그인, 외부 API, 외부 AI 호출 없이 브라우저 `localStorage`만 사용합니다.
 
 ## 기술 스택
 
@@ -32,57 +46,118 @@ npm run typecheck
 npm run build
 ```
 
-## 핵심 구조
+## 핵심 모듈
 
-### 1. Command Room
+### 1. Life HQ
 
-전체 프로젝트 상태를 판단하는 메인 대시보드입니다. 저장된 아이디어, 프로젝트, 실험의 상태와 점수를 기반으로 다음 항목을 추천합니다.
+전체 인생 상황판입니다. goals, today actions, projects, money, study, career, admin 데이터를 요약해서 보여줍니다.
 
-- Today's Next Move
-- Portfolio-worthy concepts
-- Concepts needing decision
-- Recent prompt failures
-- High taste-fit ideas
-- Career/study connected actions
+- 오늘의 핵심 우선순위 3개
+- 이번 주 핵심 목표
+- 마감 임박 항목
+- 방치된 목표
+- 공부 상태
+- 포폴 상태
+- 돈 상태
+- 취업/유학 상태
+- 오늘 해야 할 next action
 
-추천 로직은 `src/lib/workflow.ts`에 TypeScript 함수로 분리되어 있습니다.
+### 2. Goal Map
 
-### 2. Idea Pipeline
+장기 목표를 관리합니다.
 
-아이디어를 단순 메모가 아니라 상태가 변하는 파이프라인으로 관리합니다.
+각 goal은 life area, target date, current stage, next milestone, progress percentage, linked projects, linked tasks, linked money records, linked documents를 갖습니다.
 
-상태:
+### 3. Today Engine
 
-- Raw
-- Worth Keeping
-- Needs Research
-- Concept Candidate
-- Visual Experiment
-- Portfolio Candidate
-- Brand System
-- Published
-- Archived
+단순 task list가 아니라 goal과 project에서 내려온 오늘의 행동을 보여줍니다.
 
-각 아이디어는 taste fit, portfolio potential, brand depth, monetization potential, career usefulness 점수를 갖고, 이 점수로 priority와 추천 배지가 계산됩니다.
+priority는 due date, importance, career relevance, goal connection을 기반으로 mock logic으로 계산합니다.
 
-### 3. Project Studio
+### 4. Project Rooms
 
-프로젝트별로 Brand DNA, Standards, References, Prompt Experiments, Result Reviews, Portfolio Case, Next Moves를 한 화면에서 연결해 봅니다.
+디자인, 포트폴리오, 외주, 앱, 브랜드, 콘텐츠 프로젝트를 관리합니다.
 
 샘플 프로젝트:
 
-- DOLLSET: flash hotgirl dress brand, cute/princess/coquette 금지
-- NACRE ROOM: private bridal mood total brand, generic wedding hall/princess fantasy 금지
-- MYUVE: 5th-gen K-pop IP system, over-conceptual abstract labels 금지
-- NAYUL WORKROOM: personal creative director system, generic productivity app 금지
+- DOLLSET
+- NACRE ROOM
+- MYUVE
+- NAYUL OS
+- Portfolio Website
+- Upwork Profile
 
-### 4. Experiment Lab
+### 5. Study & Language Route
 
-프롬프트와 비주얼 방향을 실험하고 실패 원인을 태그로 기록합니다. `Generate next revision direction` 버튼은 외부 AI를 호출하지 않고, 선택된 failure tags와 프로젝트 DNA를 조합해 다음 수정 방향 문장을 생성합니다.
+공부와 언어 루트를 관리합니다.
 
-### 5. Portfolio Builder
+샘플:
 
-프로젝트를 선택하면 연결된 DNA, 레퍼런스, 실험, 리뷰, next moves를 바탕으로 포트폴리오 케이스 스터디 섹션을 자동 구성합니다. 사용자는 각 섹션을 직접 수정하고 저장할 수 있습니다.
+- German A1 to B2 for study abroad
+- English for freelance profile and interview
+- Chinese conversation archive
+
+### 6. Money Strategy
+
+목표 기반 돈관리 페이지입니다.
+
+보여주는 요약:
+
+- total income
+- total expense
+- balance
+- money spent on future
+- money wasted
+- study abroad saving progress
+- freelance income
+
+### 7. Career & Portfolio Tracker
+
+취업, 외주, 포트폴리오, SNS, 플랫폼, 지원 관리를 추적합니다.
+
+### 8. Life Admin Vault
+
+서류, 링크, 계정, 비자, 학교, 계약, 자격증, 구독, 건강, 여행 행정 업무를 관리합니다.
+
+### 9. Weekly Life Review
+
+주간 회고와 다음 주 핵심 3개를 기록합니다.
+
+- 이번 주 가장 많이 전진한 영역
+- 가장 방치된 영역
+- 돈 사용 요약
+- 공부 요약
+- 포폴/커리어 요약
+- 다음 주 핵심 3개
+- 위험 신호
+- 유지할 루틴
+
+## 데이터 연결 구조
+
+각 데이터는 아래 필드를 통해 서로 연결됩니다.
+
+- `area`
+- `linkedGoalId`
+- `linkedProjectId`
+- `connectedGoalId`
+- `connectedProjectId`
+- `linkedProjectIds`
+- `linkedTaskIds`
+- `linkedMoneyRecordIds`
+- `linkedDocumentIds`
+
+Life HQ는 이 연결 데이터를 기반으로 전체 상황을 계산합니다.
+
+## Mock Logic
+
+실제 AI API는 사용하지 않습니다.
+
+`src/lib/workflow.ts`에 다음 로직이 들어 있습니다.
+
+- target date가 가까운데 progress가 낮으면 goal risk 표시
+- due date, importance, career relevance, goal connection 기반 action priority 계산
+- portfolio potential, monetization potential, career relevance, linked goal risk 기반 project priority 계산
+- money future investment / waste / savings / freelance summary 계산
 
 ## 데이터 저장
 
@@ -91,7 +166,7 @@ npm run build
 현재 키:
 
 ```text
-nayul-workroom:deep-workflow:v1
+nayul-os:life-operating-system:v1
 ```
 
-사이드바의 `Reset sample archive` 버튼으로 샘플 데이터를 복원할 수 있습니다.
+사이드바의 `Reset sample OS` 버튼으로 샘플 데이터를 복원할 수 있습니다.

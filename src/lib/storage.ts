@@ -4,8 +4,11 @@ import { useEffect, useState } from "react";
 import { sampleData } from "./sample-data";
 import type { WorkroomData } from "./types";
 
-const STORAGE_KEY = "nayul-workroom:creative-director:v1";
-const WORKFLOW_STORAGE_KEY = "nayul-workroom:deep-workflow:v1";
+const LEGACY_STORAGE_KEYS = [
+  "nayul-workroom:creative-director:v1",
+  "nayul-workroom:deep-workflow:v1",
+];
+const STORAGE_KEY = "nayul-os:life-operating-system:v1";
 
 type WorkroomList<K extends keyof WorkroomData> = WorkroomData[K][number];
 
@@ -21,56 +24,108 @@ function hasNumber(value: Record<string, unknown>, key: string) {
   return typeof value[key] === "number";
 }
 
-function isPipelineIdea(value: unknown): value is WorkroomList<"ideas"> {
+function hasBoolean(value: Record<string, unknown>, key: string) {
+  return typeof value[key] === "boolean";
+}
+
+function isGoal(value: unknown): value is WorkroomList<"goals"> {
   return (
     isRecord(value) &&
     hasString(value, "id") &&
-    hasString(value, "title") &&
-    hasString(value, "rawIdea") &&
-    hasString(value, "linkedProjectId") &&
-    hasString(value, "currentStatus") &&
+    hasString(value, "goalTitle") &&
+    hasString(value, "area") &&
+    hasString(value, "targetDate") &&
+    hasString(value, "nextMilestone") &&
+    hasNumber(value, "progressPercentage") &&
+    Array.isArray(value.linkedProjectIds) &&
+    Array.isArray(value.linkedTaskIds)
+  );
+}
+
+function isTodayAction(value: unknown): value is WorkroomList<"todayActions"> {
+  return (
+    isRecord(value) &&
+    hasString(value, "id") &&
+    hasString(value, "actionTitle") &&
+    hasString(value, "linkedGoalId") &&
+    hasString(value, "area") &&
+    hasString(value, "dueDate") &&
+    hasString(value, "status") &&
+    hasNumber(value, "importance")
+  );
+}
+
+function isProject(value: unknown): value is WorkroomList<"projects"> {
+  return (
+    isRecord(value) &&
+    hasString(value, "id") &&
+    hasString(value, "projectTitle") &&
+    hasString(value, "projectType") &&
+    hasString(value, "purpose") &&
     hasString(value, "nextAction") &&
-    hasNumber(value, "tasteFit") &&
     hasNumber(value, "portfolioPotential") &&
-    hasNumber(value, "brandDepth")
+    hasNumber(value, "careerRelevance") &&
+    Array.isArray(value.linkedGoalIds)
   );
 }
 
-function isStudioProject(value: unknown): value is WorkroomList<"projects"> {
+function isStudyRoute(value: unknown): value is WorkroomList<"studyRoutes"> {
   return (
     isRecord(value) &&
     hasString(value, "id") &&
-    hasString(value, "name") &&
-    hasString(value, "coreIdentity") &&
-    hasString(value, "mustInclude") &&
-    hasString(value, "mustAvoid") &&
-    Array.isArray(value.nextMoves) &&
-    Array.isArray(value.standards) &&
-    Array.isArray(value.references) &&
-    Array.isArray(value.resultReviews)
+    hasString(value, "subjectLanguage") &&
+    hasString(value, "currentLevel") &&
+    hasString(value, "targetLevel") &&
+    hasString(value, "linkedGoalId") &&
+    hasNumber(value, "studyStreak")
   );
 }
 
-function isExperimentRecord(value: unknown): value is WorkroomList<"experiments"> {
+function isMoneyRecord(value: unknown): value is WorkroomList<"moneyRecords"> {
   return (
     isRecord(value) &&
     hasString(value, "id") &&
-    hasString(value, "experimentTitle") &&
-    hasString(value, "linkedProjectId") &&
-    hasString(value, "experimentType") &&
-    hasNumber(value, "resultRating") &&
-    Array.isArray(value.failureTags)
+    hasString(value, "recordType") &&
+    hasNumber(value, "amount") &&
+    hasString(value, "connectedGoalId") &&
+    hasString(value, "date") &&
+    hasBoolean(value, "futureInvestment") &&
+    hasBoolean(value, "wasted")
   );
 }
 
-function isPortfolioCase(value: unknown): value is WorkroomList<"portfolioCases"> {
+function isCareerItem(value: unknown): value is WorkroomList<"careerItems"> {
   return (
     isRecord(value) &&
     hasString(value, "id") &&
-    hasString(value, "projectId") &&
-    isRecord(value.sections) &&
-    hasString(value.sections, "projectOverview") &&
-    hasString(value.sections, "portfolioDescription")
+    hasString(value, "opportunityTitle") &&
+    hasString(value, "type") &&
+    hasString(value, "status") &&
+    hasString(value, "deadline") &&
+    hasNumber(value, "careerRelevance")
+  );
+}
+
+function isAdminItem(value: unknown): value is WorkroomList<"adminItems"> {
+  return (
+    isRecord(value) &&
+    hasString(value, "id") &&
+    hasString(value, "itemTitle") &&
+    hasString(value, "adminType") &&
+    hasString(value, "status") &&
+    hasString(value, "deadline") &&
+    hasString(value, "linkedGoalId")
+  );
+}
+
+function isWeeklyReview(value: unknown): value is WorkroomList<"weeklyReviews"> {
+  return (
+    isRecord(value) &&
+    hasString(value, "id") &&
+    hasString(value, "weekOf") &&
+    hasString(value, "moneySummary") &&
+    hasString(value, "studySummary") &&
+    Array.isArray(value.nextWeekTopThree)
   );
 }
 
@@ -85,11 +140,23 @@ function listOrSample<K extends keyof WorkroomData>(
 
 function normalizeData(value: Partial<WorkroomData> | null): WorkroomData {
   return {
-    ideas: listOrSample(value, "ideas", isPipelineIdea),
-    projects: listOrSample(value, "projects", isStudioProject),
-    experiments: listOrSample(value, "experiments", isExperimentRecord),
-    portfolioCases: listOrSample(value, "portfolioCases", isPortfolioCase),
+    goals: listOrSample(value, "goals", isGoal),
+    todayActions: listOrSample(value, "todayActions", isTodayAction),
+    projects: listOrSample(value, "projects", isProject),
+    studyRoutes: listOrSample(value, "studyRoutes", isStudyRoute),
+    moneyRecords: listOrSample(value, "moneyRecords", isMoneyRecord),
+    careerItems: listOrSample(value, "careerItems", isCareerItem),
+    adminItems: listOrSample(value, "adminItems", isAdminItem),
+    weeklyReviews: listOrSample(value, "weeklyReviews", isWeeklyReview),
   };
+}
+
+function loadStoredData() {
+  const stored =
+    window.localStorage.getItem(STORAGE_KEY) ??
+    LEGACY_STORAGE_KEYS.map((key) => window.localStorage.getItem(key)).find(Boolean);
+
+  return stored ? normalizeData(JSON.parse(stored) as Partial<WorkroomData>) : sampleData;
 }
 
 export function useWorkroomData() {
@@ -98,10 +165,7 @@ export function useWorkroomData() {
 
   useEffect(() => {
     try {
-      const stored =
-        window.localStorage.getItem(WORKFLOW_STORAGE_KEY) ??
-        window.localStorage.getItem(STORAGE_KEY);
-      setData(stored ? normalizeData(JSON.parse(stored)) : sampleData);
+      setData(loadStoredData());
     } catch {
       setData(sampleData);
     } finally {
@@ -114,12 +178,12 @@ export function useWorkroomData() {
       return;
     }
 
-    window.localStorage.setItem(WORKFLOW_STORAGE_KEY, JSON.stringify(data));
+    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
   }, [data, isReady]);
 
   const resetData = () => {
     setData(sampleData);
-    window.localStorage.setItem(WORKFLOW_STORAGE_KEY, JSON.stringify(sampleData));
+    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(sampleData));
   };
 
   return { data, setData, isReady, resetData };
