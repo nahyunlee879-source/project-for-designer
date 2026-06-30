@@ -1,214 +1,424 @@
 import type { WorkroomData } from "./types";
 
 export const sampleData: WorkroomData = {
-  today: {
-    priorities: [
-      "NAYUL Portfolio 2026 첫 화면: case study entry 문장 정리",
-      "독일어 A2 말하기 루틴: 지원 동기 문장 12개 녹음",
-      "6월 마지막 주 지출 정리 후 7월 작업 예산 잡기",
-    ],
-  },
-  tasks: [
+  ideas: [
     {
-      id: "task-1",
-      title: "포트폴리오 Hero 이미지 후보 6장 비교",
-      category: "Design",
-      priority: "High",
-      dueDate: "2026-06-30",
-      completed: false,
+      id: "idea-dollset-1",
+      title: "DOLLSET flash hotgirl launch grid",
+      rawIdea:
+        "A dress brand that feels like flash photography, hotgirl confidence, and sharp party styling without drifting into princess/coquette softness.",
+      category: "Brand",
+      linkedProjectId: "project-dollset",
+      tasteFit: 9,
+      portfolioPotential: 9,
+      brandDepth: 8,
+      monetizationPotential: 8,
+      careerUsefulness: 7,
+      currentStatus: "Visual Experiment",
+      nextAction: "Build 6-frame lookbook sequence with flash, chrome, black-red styling rules.",
+      reasonWhyThisMatters:
+        "This can become a high-impact fashion branding case that shows taste control and audience clarity.",
+      tags: "fashion, flash, hotgirl, dress, launch",
+      deadline: "2026-07-06",
     },
     {
-      id: "task-2",
-      title: "독일어 자기소개 문장 shadowing 20분",
-      category: "Language",
-      priority: "Medium",
-      dueDate: "2026-06-29",
-      completed: false,
+      id: "idea-nacre-1",
+      title: "NACRE ROOM private bridal mood system",
+      rawIdea:
+        "A total bridal brand that feels private, pearly, and quiet instead of generic wedding hall fantasy.",
+      category: "Brand",
+      linkedProjectId: "project-nacre",
+      tasteFit: 8,
+      portfolioPotential: 8,
+      brandDepth: 9,
+      monetizationPotential: 7,
+      careerUsefulness: 8,
+      currentStatus: "Concept Candidate",
+      nextAction: "Decode pearl, veil, and private room references into material and composition rules.",
+      reasonWhyThisMatters:
+        "It can show how to avoid bridal cliches while still keeping a complete service brand.",
+      tags: "bridal, private, pearl, mood, total brand",
+      deadline: "2026-07-09",
     },
     {
-      id: "task-3",
-      title: "UX 포트폴리오 지원 공고 3개 저장",
-      category: "Career",
-      priority: "Medium",
-      dueDate: "2026-07-01",
-      completed: false,
+      id: "idea-myuve-1",
+      title: "MYUVE 5th-gen K-pop IP signature rule",
+      rawIdea:
+        "A K-pop IP system with identity codes that fans can recognize across teaser, merch, and content captions.",
+      category: "Music/IP",
+      linkedProjectId: "project-myuve",
+      tasteFit: 8,
+      portfolioPotential: 9,
+      brandDepth: 8,
+      monetizationPotential: 8,
+      careerUsefulness: 8,
+      currentStatus: "Needs Research",
+      nextAction: "Compare 5th-gen teaser systems and list what is concrete versus over-abstract labeling.",
+      reasonWhyThisMatters:
+        "It connects music/IP taste with practical brand system thinking, useful for entertainment design roles.",
+      tags: "kpop, ip, fan system, teaser, merch",
+      deadline: "2026-07-12",
     },
     {
-      id: "task-4",
-      title: "이번 달 카페/자료 구입비 분리 기록",
-      category: "Money",
-      priority: "Low",
-      dueDate: "2026-07-02",
-      completed: true,
+      id: "idea-workroom-1",
+      title: "NAYUL WORKROOM as portfolio case",
+      rawIdea:
+        "Turn the app itself into a case study about converting scattered creative notes into project and career decisions.",
+      category: "Portfolio",
+      linkedProjectId: "project-workroom",
+      tasteFit: 10,
+      portfolioPotential: 10,
+      brandDepth: 8,
+      monetizationPotential: 5,
+      careerUsefulness: 10,
+      currentStatus: "Portfolio Candidate",
+      nextAction: "Document before/after information architecture and decision workflow logic.",
+      reasonWhyThisMatters:
+        "It proves system thinking, product thinking, and personal creative direction in one project.",
+      tags: "portfolio, product, workflow, creative director",
+      deadline: "2026-07-03",
     },
   ],
   projects: [
     {
-      id: "project-1",
-      title: "NAYUL Portfolio 2026",
-      type: "Portfolio",
-      status: "In Progress",
-      deadline: "2026-07-12",
-      description:
-        "개인 작업실의 조용한 집중감을 담은 포트폴리오. 프로젝트별 문제 정의와 시각 결정을 명확하게 보이게 만든다.",
-      nextAction: "메인 케이스 스터디 1개를 problem, system, visual proof 순서로 재배치",
-    },
-    {
-      id: "project-2",
-      title: "Cherry Archive Beauty Direction",
-      type: "Beauty",
-      status: "Idea",
-      deadline: "2026-07-20",
-      description:
-        "체리 레드, 실버 패키징, 아이보리 스튜디오 배경을 중심으로 한 뷰티 캠페인 무드 실험.",
-      nextAction: "피부 질감이 자연스러운 레퍼런스 10개와 피해야 할 AI-glam 사례 5개 정리",
-    },
-    {
-      id: "project-3",
-      title: "K-pop IP Visual System Study",
-      type: "K-pop/IP",
-      status: "Waiting",
-      deadline: "2026-08-03",
-      description:
-        "앨범 티저, 팬 커뮤니티, 굿즈 톤을 하나의 IP 언어로 묶는 비주얼 시스템 스터디.",
-      nextAction: "좋은 IP 시스템과 과한 팬시 스타일의 차이를 한 장으로 정리",
-    },
-  ],
-  languageNotes: [
-    {
-      id: "lang-1",
-      language: "German",
-      original: "Ich arbeite heute an meinem Portfolio und sortiere meine Projekte.",
-      meaning: "나는 오늘 내 포트폴리오를 작업하고 프로젝트를 정리한다.",
-      level: "A2",
-      tags: "portfolio, routine, study abroad",
-      reviewDate: "2026-06-29",
-    },
-    {
-      id: "lang-2",
-      language: "English",
-      original: "The direction should feel quiet, precise, and emotionally believable.",
-      meaning: "그 방향은 조용하고 정교하며 감정적으로 믿을 수 있게 느껴져야 한다.",
-      level: "B1",
-      tags: "design critique, portfolio",
-      reviewDate: "2026-07-01",
-    },
-    {
-      id: "lang-3",
-      language: "Chinese",
-      original: "我想把作品集做得更清楚、更有个人风格。",
-      meaning: "나는 포트폴리오를 더 명확하고 더 개인적인 스타일로 만들고 싶다.",
-      level: "A1",
-      tags: "portfolio, intention",
-      reviewDate: "2026-07-03",
-    },
-  ],
-  designNotes: [
-    {
-      id: "design-1",
-      projectName: "NAYUL Portfolio 2026",
-      brandConcept:
-        "나현의 작업을 조용하지만 단단하게 보여주는 프라이빗 디자인 아카이브. 결과물보다 판단 과정이 먼저 보이는 포트폴리오.",
-      moodKeywords:
-        "ivory paper, pale blue signal, silver line, cherry mark, editorial index, calm command",
-      colorPalette: "#f7f1e8, #fbf8f1, #aebfd4, #b9bcc2, #a9232d",
-      target: "디자인 학교 지원 담당자, 주니어 디자이너 채용 담당자, 브랜드 스튜디오 리크루터",
-      visualDirection:
-        "잡지 목차 같은 리듬, 얇은 실버 라인, 중요한 판단은 크게, 보조 정보는 조용하게 배치",
-      avoid: "노션 클론, 귀여운 파스텔, 회사용 SaaS 표, 과한 그림자, AI처럼 완벽한 인물 이미지",
-    },
-    {
-      id: "design-2",
-      projectName: "Cherry Archive Beauty Direction",
-      brandConcept:
-        "체리 레드의 생기와 실버의 차가운 정밀함을 섞은 에디토리얼 뷰티 아카이브.",
-      moodKeywords: "cherry red, brushed silver, natural skin, quiet studio, tactile paper",
-      colorPalette: "#a9232d, #b9bcc2, #f7f1e8, #dfe8f1",
-      target: "20대 초중반 뷰티 소비자, 이미지 생성 캠페인 실험용 포트폴리오 관람자",
-      visualDirection:
-        "피부 결은 자연스럽게 남기고, 손과 자세는 살짝 불완전하게, 제품은 선명한 실버 디테일로 강조",
-      avoid: "plastic skin, doll face, neon gradient, stiff pose, over-retouched campaign image",
-    },
-  ],
-  prompts: [
-    {
-      id: "prompt-1",
-      title: "Editorial Beauty Moodboard",
-      project: "Cherry Archive Beauty Direction",
-      promptText:
-        "A quiet editorial beauty campaign moodboard with ivory paper, pale blue shadows, brushed silver details, cherry red accent objects, natural model expression, subtle skin texture, refined studio lighting.",
-      type: "Image",
-      score: 8,
-      memo: "실버 소품과 아이보리 종이 질감은 좋음. 피부 표현은 더 자연스럽게 낮춰야 함.",
-      avoidList:
-        "plastic skin, doll-like symmetry, neon glow, heavy retouching, stiff hands, AI-glam perfection",
-    },
-    {
-      id: "prompt-2",
-      title: "Portfolio Case Study Rewrite",
-      project: "NAYUL Portfolio 2026",
-      promptText:
-        "Rewrite this design project case study in a calm editorial tone. Emphasize the problem, visual decisions, constraints, and what changed after iteration. Keep the voice personal but precise.",
-      type: "Portfolio",
-      score: 9,
-      memo: "문장 톤 정리에 재사용 가능. 너무 기업 보고서처럼 바뀌지 않게 주의.",
-      avoidList:
-        "generic SaaS language, overconfident claims, buzzwords, vague impact, notion-like phrasing",
-    },
-  ],
-  moneyRecords: [
-    {
-      id: "money-1",
-      type: "income",
-      amount: 450000,
-      category: "Freelance",
-      date: "2026-06-25",
-      memo: "로고 시안 및 간단한 브랜드 가이드 정리",
-    },
-    {
-      id: "money-2",
-      type: "expense",
-      amount: 68000,
-      category: "Books",
-      date: "2026-06-27",
-      memo: "브랜드 시스템/에디토리얼 디자인 자료",
-    },
-    {
-      id: "money-3",
-      type: "expense",
-      amount: 22000,
-      category: "Cafe",
-      date: "2026-06-29",
-      memo: "포트폴리오 리라이트 작업",
-    },
-    {
-      id: "money-4",
-      type: "expense",
-      amount: 39000,
-      category: "Assets",
-      date: "2026-06-28",
-      memo: "프레젠테이션 mockup asset",
-    },
-  ],
-  weeklyResets: [
-    {
-      id: "week-1",
-      weekOf: "2026-06-29",
-      movedForward:
-        "포트폴리오 첫 화면의 톤을 '조용한 개인 작업실'로 정리했고, 케이스 스터디 목차를 다시 나눴다.",
-      delayed:
-        "독일어 복습 시간이 매일 같은 시간에 고정되지 않았다. 오전보다 밤 루틴이 더 현실적이다.",
-      moneySpent:
-        "카페 작업비와 디자인 자료 구입비가 많았다. 7월에는 자료비를 별도 예산으로 묶어야 한다.",
-      studied:
-        "독일어 A2 자기소개, 영어 디자인 critique 표현, 포트폴리오 프로젝트 설명 문장.",
-      designImproved:
-        "Cherry Archive 프로젝트에서 피부 질감과 실버 패키징 디테일의 방향이 더 구체화됐다.",
-      nextPriorities: [
-        "NAYUL Portfolio 메인 케이스 스터디 1개 완성",
-        "독일어 speaking ritual을 밤 20분으로 고정",
-        "7월 디자인/자료/카페 예산을 Money Room에 입력",
+      id: "project-dollset",
+      name: "DOLLSET",
+      status: "Experimenting",
+      deadline: "2026-07-14",
+      category: "Brand",
+      tasteFit: 9,
+      portfolioPotential: 9,
+      brandDepth: 8,
+      monetizationPotential: 8,
+      careerUsefulness: 7,
+      coreIdentity:
+        "A flash hotgirl dress brand with sharp confidence, night-out energy, and controlled sexiness.",
+      target: "Young women who want party dresses that feel bold, direct, and image-ready.",
+      problemIntention:
+        "Create a fashion brand that feels daring without falling into cute, princess, or coquette cliches.",
+      mustInclude:
+        "Flash photography, chrome details, black or deep red accents, confident body language, direct styling.",
+      mustAvoid:
+        "Cute/princess/coquette mood, ribbon overload, soft bridal lace, doll-like innocence, cheap clubwear look.",
+      visualCodes:
+        "High flash contrast, cropped poses, silver zipper/chain details, black-red palette, sharp sans typography.",
+      portfolioUsage:
+        "Use as a fashion branding case about controlling seductive styling without losing brand precision.",
+      deliverables: "Logo direction, lookbook grid, campaign prompt system, product page tone, launch captions.",
+      nextMoves: [
+        "Choose the main red/black/silver palette.",
+        "Run 3 prompt experiments for flash dress campaign imagery.",
+        "Write one brand rule that separates hotgirl from coquette.",
       ],
+      standards: [
+        {
+          id: "std-dollset-1",
+          title: "Hotgirl, not coquette",
+          type: "Brand Rule",
+          rule: "The brand can be flirtatious but must never become cute, princess-like, or ribbon-heavy.",
+        },
+        {
+          id: "std-dollset-2",
+          title: "Flash creates attitude",
+          type: "Visual Rule",
+          rule: "Use flash contrast and cropped movement to create energy instead of decorative styling.",
+        },
+      ],
+      references: [
+        {
+          id: "ref-dollset-1",
+          title: "Flash party editorial crop",
+          whyItMatters: "The crop makes the product feel immediate and alive.",
+          borrow: "Flash edge, body crop, black/silver contrast.",
+          avoidCopying: "Do not copy celebrity styling or exact pose; borrow the energy system.",
+          tags: "flash, fashion, crop",
+        },
+      ],
+      resultReviews: [
+        {
+          id: "review-dollset-1",
+          title: "First flash prompt review",
+          score: 6,
+          whatChanged: "Removed bows and softened lighting from the prompt.",
+          decision: "Needs stronger chrome and less romantic styling.",
+        },
+      ],
+    },
+    {
+      id: "project-nacre",
+      name: "NACRE ROOM",
+      status: "Developing",
+      deadline: "2026-07-18",
+      category: "Brand",
+      tasteFit: 8,
+      portfolioPotential: 8,
+      brandDepth: 9,
+      monetizationPotential: 7,
+      careerUsefulness: 8,
+      coreIdentity:
+        "A private bridal mood total brand built around nacre, quiet rooms, and personal ceremony preparation.",
+      target: "Brides who want an intimate and refined mood rather than generic wedding hall fantasy.",
+      problemIntention:
+        "Build a bridal brand that feels private and atmospheric without becoming princess fantasy.",
+      mustInclude:
+        "Pearl/nacre surface, private room mood, soft silver, quiet fabric movement, service totality.",
+      mustAvoid:
+        "Generic wedding hall, princess fantasy, overly sweet flowers, stock bridal poses, beige sameness.",
+      visualCodes:
+        "Nacre sheen, translucent veil layers, pale blue-grey shadow, soft silver line, editorial spacing.",
+      portfolioUsage:
+        "Use as a brand system case that translates mood into service, product, and content rules.",
+      deliverables: "Brand DNA, service menu, reference decoder, campaign image rules, portfolio narrative.",
+      nextMoves: [
+        "Define what 'private bridal' means in one line.",
+        "Decode 5 pearl/nacre references into visual codes.",
+        "Test prompt direction that avoids princess fantasy.",
+      ],
+      standards: [
+        {
+          id: "std-nacre-1",
+          title: "Private, not generic bridal",
+          type: "Brand Rule",
+          rule: "The atmosphere should feel like a personal room, not a wedding venue advertisement.",
+        },
+      ],
+      references: [
+        {
+          id: "ref-nacre-1",
+          title: "Nacre shell interior sheen",
+          whyItMatters: "It gives bridal softness without becoming floral or princess-like.",
+          borrow: "Pearl reflection, curved surface, quiet silver-blue light.",
+          avoidCopying: "Do not turn it into literal shell decoration everywhere.",
+          tags: "nacre, bridal, material",
+        },
+      ],
+      resultReviews: [
+        {
+          id: "review-nacre-1",
+          title: "Bridal direction risk check",
+          score: 7,
+          whatChanged: "Replaced wedding hall keywords with private room and material codes.",
+          decision: "Promising, but needs clearer service/product deliverables.",
+        },
+      ],
+    },
+    {
+      id: "project-myuve",
+      name: "MYUVE",
+      status: "Developing",
+      deadline: "2026-07-22",
+      category: "Music/IP",
+      tasteFit: 8,
+      portfolioPotential: 9,
+      brandDepth: 8,
+      monetizationPotential: 8,
+      careerUsefulness: 8,
+      coreIdentity:
+        "A 5th-gen K-pop IP system where each visual code can become teaser, merch, caption, and fan memory.",
+      target: "Entertainment design recruiters and fans who respond to recognizable identity systems.",
+      problemIntention:
+        "Make a K-pop IP concept that is concrete enough to use, not just abstract lore words.",
+      mustInclude:
+        "Repeatable symbol, fan-facing phrase, teaser grid, product extension, visual rule consistency.",
+      mustAvoid:
+        "Over-conceptual abstract labels, lore without design use, random futuristic effects, empty symbolism.",
+      visualCodes:
+        "Pale blue signal, chrome text edge, modular symbol, controlled motion blur, stage-to-merch continuity.",
+      portfolioUsage:
+        "Use as an entertainment/IP case showing how a concept becomes a usable identity system.",
+      deliverables: "IP rulebook, teaser grid, merch mockups, caption system, fan content matrix.",
+      nextMoves: [
+        "List concrete visual rules fans could recognize.",
+        "Create one symbol that works on teaser and merch.",
+        "Write caption system rules without abstract lore overload.",
+      ],
+      standards: [
+        {
+          id: "std-myuve-1",
+          title: "Lore must become an asset",
+          type: "Visual Rule",
+          rule: "Every concept word must map to a visual, product, caption, or fan behavior.",
+        },
+      ],
+      references: [
+        {
+          id: "ref-myuve-1",
+          title: "5th-gen teaser continuity",
+          whyItMatters: "The same code repeats across teaser, merch, and fan edits.",
+          borrow: "Repeatable mark, motion rule, caption tone.",
+          avoidCopying: "Avoid copying group-specific symbols or fandom language.",
+          tags: "kpop, teaser, fan",
+        },
+      ],
+      resultReviews: [
+        {
+          id: "review-myuve-1",
+          title: "Concept abstraction check",
+          score: 5,
+          whatChanged: "Removed vague labels and forced each keyword into a deliverable.",
+          decision: "Needs stronger concrete asset system.",
+        },
+      ],
+    },
+    {
+      id: "project-workroom",
+      name: "NAYUL WORKROOM",
+      status: "Portfolio Build",
+      deadline: "2026-07-08",
+      category: "Portfolio",
+      tasteFit: 10,
+      portfolioPotential: 10,
+      brandDepth: 8,
+      monetizationPotential: 5,
+      careerUsefulness: 10,
+      coreIdentity:
+        "A personal creative director system that turns scattered ideas into project, portfolio, and career decisions.",
+      target: "Design school reviewers, brand studio recruiters, and the designer herself.",
+      problemIntention:
+        "Stop treating notes as storage. Build a workflow that moves ideas into decisions and portfolio proof.",
+      mustInclude:
+        "Pipeline status, score logic, linked projects, experiment failures, portfolio builder aggregation.",
+      mustAvoid:
+        "Generic productivity app, Notion clone, shallow CRUD pages, corporate dashboard feeling.",
+      visualCodes:
+        "Ivory archive, pale blue signal, silver dividers, cherry decision marks, editorial cards.",
+      portfolioUsage:
+        "Use as a product/design system case about personal creative direction and information architecture.",
+      deliverables: "Interactive MVP, workflow map, score logic, project studio, portfolio case builder.",
+      nextMoves: [
+        "Capture before/after information architecture.",
+        "Show scoring utility and mock aggregation logic in the case study.",
+        "Write interview talking points around why CRUD was not enough.",
+      ],
+      standards: [
+        {
+          id: "std-workroom-1",
+          title: "Workflow over storage",
+          type: "Brand Rule",
+          rule: "Every saved item should help the next decision, not just become another card.",
+        },
+      ],
+      references: [
+        {
+          id: "ref-workroom-1",
+          title: "Editorial archive dashboard",
+          whyItMatters: "It lets complex information feel private and composed.",
+          borrow: "Large decision statement, numbered sections, thin silver rules.",
+          avoidCopying: "Avoid making it a static magazine page; it still needs workflows.",
+          tags: "editorial, archive, app",
+        },
+      ],
+      resultReviews: [
+        {
+          id: "review-workroom-1",
+          title: "CRUD depth review",
+          score: 6,
+          whatChanged: "Reduced page count and created project-linked modules.",
+          decision: "The next version should show relationships and recommendations more clearly.",
+        },
+      ],
+    },
+  ],
+  experiments: [
+    {
+      id: "exp-dollset-1",
+      experimentTitle: "Flash hotgirl dress prompt",
+      linkedProjectId: "project-dollset",
+      experimentType: "Prompt",
+      originalDirection:
+        "A cute coquette party dress campaign with ribbons, flash photography, and pretty girl styling.",
+      revisedDirection:
+        "A flash hotgirl dress campaign with chrome zipper detail, black-red styling, confident body crop, direct camera flash, no bows.",
+      resultRating: 6,
+      whatWorked: "Flash and chrome detail started to feel like DOLLSET.",
+      whatFailed: "The first version became too cute and coquette, weakening the brand edge.",
+      failureTags: ["too cute", "brand DNA mismatch"],
+      nextRevision:
+        "Push flash contrast, reduce softness, and make the model posture sharper and less decorative.",
+      usableForPortfolio: "Yes",
+      createdAt: "2026-06-30",
+    },
+    {
+      id: "exp-nacre-1",
+      experimentTitle: "Private bridal moodboard text",
+      linkedProjectId: "project-nacre",
+      experimentType: "Visual Direction",
+      originalDirection:
+        "Elegant bridal hall with princess mood, white flowers, pearl details, and romantic lighting.",
+      revisedDirection:
+        "Private bridal preparation room with nacre sheen, translucent veil movement, soft silver line, pale blue-grey shadow.",
+      resultRating: 7,
+      whatWorked: "Private room and nacre material made the concept more ownable.",
+      whatFailed: "Some wording still feels like generic bridal styling.",
+      failureTags: ["too bridal", "too generic"],
+      nextRevision:
+        "Anchor the mood in material and service behavior instead of wedding hall imagery.",
+      usableForPortfolio: "Yes",
+      createdAt: "2026-06-29",
+    },
+    {
+      id: "exp-myuve-1",
+      experimentTitle: "MYUVE lore-to-asset test",
+      linkedProjectId: "project-myuve",
+      experimentType: "Product Idea",
+      originalDirection:
+        "A conceptual K-pop universe about memory waves, future icons, and abstract emotional signals.",
+      revisedDirection:
+        "A repeatable fan-facing symbol system where one pale blue signal mark appears in teaser, merch, caption, and fan edit frames.",
+      resultRating: 5,
+      whatWorked: "The repeated signal mark can become a real IP asset.",
+      whatFailed: "The first direction used over-conceptual abstract labels without deliverables.",
+      failureTags: ["too generic", "too flat", "not portfolio-worthy"],
+      nextRevision:
+        "Turn each concept word into a concrete object, motion rule, merch placement, or caption phrase.",
+      usableForPortfolio: "No",
+      createdAt: "2026-06-28",
+    },
+    {
+      id: "exp-workroom-1",
+      experimentTitle: "Portfolio case overview",
+      linkedProjectId: "project-workroom",
+      experimentType: "Portfolio Text",
+      originalDirection:
+        "NAYUL WORKROOM is a productivity dashboard for designers with tasks, projects, and money.",
+      revisedDirection:
+        "NAYUL WORKROOM is a private creative director system that converts ideas into project decisions, experiment revisions, portfolio proof, and career actions.",
+      resultRating: 9,
+      whatWorked: "The revised direction separates the project from generic productivity apps.",
+      whatFailed: "The first version sounded like a normal dashboard and did not explain the workflow.",
+      failureTags: ["too generic", "not portfolio-worthy"],
+      nextRevision:
+        "Add a before/after workflow map and show how scoring recommendations are generated.",
+      usableForPortfolio: "Yes",
+      createdAt: "2026-06-30",
+    },
+  ],
+  portfolioCases: [
+    {
+      id: "case-workroom",
+      projectId: "project-workroom",
+      updatedAt: "2026-06-30",
+      sections: {
+        projectOverview:
+          "A localStorage MVP for a personal creative director system, designed to move ideas through scoring, project linking, experiments, and portfolio aggregation.",
+        problemIntention:
+          "The first version felt like shallow CRUD. The redesign reframes saved data as workflow evidence and creative judgment.",
+        target: "A designer/student preparing portfolio, brand direction, and career applications.",
+        brandSystem:
+          "Ivory archive, pale blue signal, silver dividers, cherry decision marks, editorial private studio tone.",
+        visualDirection:
+          "Project growth is shown through status badges, score meters, linked project chips, next actions, and failure-based revision prompts.",
+        experiments:
+          "Prompt failures and portfolio text revisions are connected to project DNA and reused inside the case structure.",
+        deliverables:
+          "Command Room, Idea Pipeline, Project Studio, Experiment Lab, Portfolio Builder.",
+        portfolioDescription:
+          "A private creative director system that turns scattered notes into design decisions and portfolio-ready narratives.",
+        interviewTalkingPoints:
+          "Why CRUD was insufficient; how scoring logic guides priorities; how project DNA shapes experiment revision; how local MVP can expand later.",
+        nextExpansion:
+          "Add visual uploads, project timelines, and exportable portfolio case pages after the workflow proves useful.",
+      },
     },
   ],
 };

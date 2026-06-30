@@ -1,157 +1,215 @@
-export type TaskCategory =
-  | "Study"
-  | "Language"
-  | "Design"
-  | "Money"
-  | "Life Admin"
-  | "Career";
-
-export type Priority = "Low" | "Medium" | "High";
-
-export type ProjectType =
-  | "Branding"
+export type IdeaCategory =
+  | "Brand"
   | "Portfolio"
-  | "K-pop/IP"
-  | "Beauty"
-  | "Fashion"
+  | "Prompt"
+  | "Content"
   | "Career"
-  | "Study Abroad";
+  | "Study Abroad"
+  | "Language"
+  | "Money"
+  | "Music/IP";
 
-export type ProjectStatus = "Idea" | "In Progress" | "Waiting" | "Done";
+export type PipelineStatus =
+  | "Raw"
+  | "Worth Keeping"
+  | "Needs Research"
+  | "Concept Candidate"
+  | "Visual Experiment"
+  | "Portfolio Candidate"
+  | "Brand System"
+  | "Published"
+  | "Archived";
 
-export type Language = "German" | "English" | "Chinese" | "Korean";
+export type ProjectStatus =
+  | "Idea"
+  | "Developing"
+  | "Experimenting"
+  | "Portfolio Build"
+  | "Published"
+  | "Paused";
 
-export type LanguageLevel = "A1" | "A2" | "B1" | "B2" | "C1";
+export type ExperimentType =
+  | "Prompt"
+  | "Visual Direction"
+  | "Product Idea"
+  | "Portfolio Text"
+  | "Content Caption";
 
-export type PromptType = "Image" | "Brand" | "Product" | "Portfolio" | "Music";
+export type FailureTag =
+  | "too cute"
+  | "too generic"
+  | "too bridal"
+  | "too AI-looking"
+  | "too flat"
+  | "too commercial"
+  | "too vulgar"
+  | "brand DNA mismatch"
+  | "not portfolio-worthy";
 
-export type MoneyType = "income" | "expense";
+export type PortfolioUsable = "Yes" | "No";
 
-export interface Task {
-  id: string;
-  title: string;
-  category: TaskCategory;
-  priority: Priority;
-  dueDate: string;
-  completed: boolean;
+export interface ScoreSet {
+  tasteFit: number;
+  portfolioPotential: number;
+  brandDepth: number;
+  monetizationPotential: number;
+  careerUsefulness: number;
 }
 
-export interface Project {
+export interface PipelineIdea extends ScoreSet {
   id: string;
   title: string;
-  type: ProjectType;
+  rawIdea: string;
+  category: IdeaCategory;
+  linkedProjectId: string;
+  currentStatus: PipelineStatus;
+  nextAction: string;
+  reasonWhyThisMatters: string;
+  tags: string;
+  deadline: string;
+}
+
+export interface ProjectStandard {
+  id: string;
+  title: string;
+  rule: string;
+  type: "Visual Rule" | "Brand Rule" | "Writing Rule" | "Career Rule";
+}
+
+export interface ProjectReference {
+  id: string;
+  title: string;
+  whyItMatters: string;
+  borrow: string;
+  avoidCopying: string;
+  tags: string;
+}
+
+export interface ResultReview {
+  id: string;
+  title: string;
+  score: number;
+  whatChanged: string;
+  decision: string;
+}
+
+export interface StudioProject extends ScoreSet {
+  id: string;
+  name: string;
   status: ProjectStatus;
   deadline: string;
-  description: string;
-  nextAction: string;
-}
-
-export interface LanguageNote {
-  id: string;
-  language: Language;
-  original: string;
-  meaning: string;
-  level: LanguageLevel;
-  tags: string;
-  reviewDate: string;
-}
-
-export interface DesignNote {
-  id: string;
-  projectName: string;
-  brandConcept: string;
-  moodKeywords: string;
-  colorPalette: string;
+  category: IdeaCategory;
+  coreIdentity: string;
   target: string;
+  problemIntention: string;
+  mustInclude: string;
+  mustAvoid: string;
+  visualCodes: string;
+  portfolioUsage: string;
+  deliverables: string;
+  nextMoves: string[];
+  standards: ProjectStandard[];
+  references: ProjectReference[];
+  resultReviews: ResultReview[];
+}
+
+export interface ExperimentRecord {
+  id: string;
+  experimentTitle: string;
+  linkedProjectId: string;
+  experimentType: ExperimentType;
+  originalDirection: string;
+  revisedDirection: string;
+  resultRating: number;
+  whatWorked: string;
+  whatFailed: string;
+  failureTags: FailureTag[];
+  nextRevision: string;
+  usableForPortfolio: PortfolioUsable;
+  createdAt: string;
+}
+
+export interface PortfolioSections {
+  projectOverview: string;
+  problemIntention: string;
+  target: string;
+  brandSystem: string;
   visualDirection: string;
-  avoid: string;
+  experiments: string;
+  deliverables: string;
+  portfolioDescription: string;
+  interviewTalkingPoints: string;
+  nextExpansion: string;
 }
 
-export interface PromptNote {
+export interface PortfolioCase {
   id: string;
-  title: string;
-  project: string;
-  promptText: string;
-  type: PromptType;
-  score: number;
-  memo: string;
-  avoidList: string;
-}
-
-export interface MoneyRecord {
-  id: string;
-  type: MoneyType;
-  amount: number;
-  category: string;
-  date: string;
-  memo: string;
-}
-
-export interface WeeklyReset {
-  id: string;
-  weekOf: string;
-  movedForward: string;
-  delayed: string;
-  moneySpent: string;
-  studied: string;
-  designImproved: string;
-  nextPriorities: string[];
+  projectId: string;
+  sections: PortfolioSections;
+  updatedAt: string;
 }
 
 export interface WorkroomData {
-  today: {
-    priorities: string[];
-  };
-  tasks: Task[];
-  projects: Project[];
-  languageNotes: LanguageNote[];
-  designNotes: DesignNote[];
-  prompts: PromptNote[];
-  moneyRecords: MoneyRecord[];
-  weeklyResets: WeeklyReset[];
+  ideas: PipelineIdea[];
+  projects: StudioProject[];
+  experiments: ExperimentRecord[];
+  portfolioCases: PortfolioCase[];
 }
 
-export const TASK_CATEGORIES: TaskCategory[] = [
-  "Study",
-  "Language",
-  "Design",
-  "Money",
-  "Life Admin",
-  "Career",
-];
-
-export const PRIORITIES: Priority[] = ["Low", "Medium", "High"];
-
-export const PROJECT_TYPES: ProjectType[] = [
-  "Branding",
+export const IDEA_CATEGORIES: IdeaCategory[] = [
+  "Brand",
   "Portfolio",
-  "K-pop/IP",
-  "Beauty",
-  "Fashion",
+  "Prompt",
+  "Content",
   "Career",
   "Study Abroad",
+  "Language",
+  "Money",
+  "Music/IP",
+];
+
+export const PIPELINE_STATUSES: PipelineStatus[] = [
+  "Raw",
+  "Worth Keeping",
+  "Needs Research",
+  "Concept Candidate",
+  "Visual Experiment",
+  "Portfolio Candidate",
+  "Brand System",
+  "Published",
+  "Archived",
 ];
 
 export const PROJECT_STATUSES: ProjectStatus[] = [
   "Idea",
-  "In Progress",
-  "Waiting",
-  "Done",
+  "Developing",
+  "Experimenting",
+  "Portfolio Build",
+  "Published",
+  "Paused",
 ];
 
-export const LANGUAGES: Language[] = ["German", "English", "Chinese", "Korean"];
-
-export const LANGUAGE_LEVELS: LanguageLevel[] = ["A1", "A2", "B1", "B2", "C1"];
-
-export const PROMPT_TYPES: PromptType[] = [
-  "Image",
-  "Brand",
-  "Product",
-  "Portfolio",
-  "Music",
+export const EXPERIMENT_TYPES: ExperimentType[] = [
+  "Prompt",
+  "Visual Direction",
+  "Product Idea",
+  "Portfolio Text",
+  "Content Caption",
 ];
 
-export const MONEY_TYPES: MoneyType[] = ["income", "expense"];
+export const FAILURE_TAGS: FailureTag[] = [
+  "too cute",
+  "too generic",
+  "too bridal",
+  "too AI-looking",
+  "too flat",
+  "too commercial",
+  "too vulgar",
+  "brand DNA mismatch",
+  "not portfolio-worthy",
+];
+
+export const PORTFOLIO_USABLE_OPTIONS: PortfolioUsable[] = ["Yes", "No"];
 
 export const REALISM_LOCK =
   "Human first, styling second. Natural skin texture, subtle asymmetry, realistic hands, flyaway hair, imperfect posture, believable facial expression. Avoid doll-like face, plastic skin, stiff posing, AI-glam perfection.";
